@@ -76,11 +76,9 @@ WSGI_APPLICATION = 'scrum.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'database',
-        'USER': 'user',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'OPTIONS': {
+            'read_default_file': str(BASE_DIR / 'config/mysql.cnf')
+        }
     }
 }
 
