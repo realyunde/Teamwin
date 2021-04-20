@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # teamwin
-    'teamwin.account.apps.AccountConfig',
-    'teamwin.project.apps.ProjectConfig',
+    'teamwin.account',
+    'teamwin.project',
 ]
 
 MIDDLEWARE = [
