@@ -9,6 +9,7 @@ class Project(models.Model):
     )
     description = models.TextField()
     is_private = models.BooleanField(default=True)
+    owner = models.ForeignKey('account.Account', on_delete=models.PROTECT)
 
 
 class Role(models.Model):
@@ -27,7 +28,7 @@ class Role(models.Model):
 class Member(models.Model):
     account = models.ForeignKey('account.Account', on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL)
 
 
 # WorkItem
@@ -69,7 +70,7 @@ class WorkItem(models.Model):
     )
     description = models.TextField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    _type = models.ForeignKey(WorkItemType, on_delete=models.CASCADE)
-    status = models.ForeignKey(WorkItemStatus, on_delete=models.CASCADE)
-    priority = models.ForeignKey(WorkItemPriority, on_delete=models.CASCADE)
-    assigned = models.ForeignKey('account.Account', on_delete=models.CASCADE)
+    _type = models.ForeignKey(WorkItemType, on_delete=models.SET_NULL)
+    status = models.ForeignKey(WorkItemStatus, on_delete=models.SET_NULL)
+    priority = models.ForeignKey(WorkItemPriority, on_delete=models.SET_NULL)
+    assigned = models.ForeignKey('account.Account', on_delete=models.SET_NULL)
