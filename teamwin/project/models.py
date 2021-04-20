@@ -28,7 +28,7 @@ class Role(models.Model):
 class Member(models.Model):
     account = models.ForeignKey('account.Account', on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    role = models.ForeignKey(Role, on_delete=models.SET_NULL)
+    role = models.ForeignKey(Role, null=True, on_delete=models.SET_NULL)
 
 
 # WorkItem
@@ -70,7 +70,7 @@ class WorkItem(models.Model):
     )
     description = models.TextField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    _type = models.ForeignKey(WorkItemType, on_delete=models.SET_NULL)
-    status = models.ForeignKey(WorkItemStatus, on_delete=models.SET_NULL)
-    priority = models.ForeignKey(WorkItemPriority, on_delete=models.SET_NULL)
-    assigned = models.ForeignKey('account.Account', on_delete=models.SET_NULL)
+    _type = models.ForeignKey(WorkItemType, null=True, on_delete=models.SET_NULL)
+    status = models.ForeignKey(WorkItemStatus, null=True, on_delete=models.SET_NULL)
+    priority = models.ForeignKey(WorkItemPriority, null=True, on_delete=models.SET_NULL)
+    assigned = models.ForeignKey('account.Account', null=True, on_delete=models.SET_NULL)
