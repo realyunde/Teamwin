@@ -1,4 +1,13 @@
+import hashlib
 from django.db import models
+
+
+def make_password(password):
+    if not isinstance(password, (bytes, str)):
+        raise TypeError('Password must be a string or bytes.')
+    if isinstance(password, str):
+        password = password.encode('utf-8')
+    return hashlib.md5(password).hexdigest()
 
 
 class User(models.Model):
@@ -48,4 +57,30 @@ class User(models.Model):
             user = cls.objects.get(email=email)
         except cls.DoesNotExist:
             user = None
+        return False if user is None else True
+
+    @classmethod
+    def create_user(cls, name, email, password):
+        token = make_password(password)
+        try:
+            user = cls(
+                name=name,
+                email=email,
+                token=token
+            )
+            user.save()
+        except:
+            user = None
         return user
+
+    @classmethod
+    def auth_user(cls, name, password):
+        user = cls.get_by_name(name)
+        if user is None:
+            return False
+        if user.token != make_password(password):
+            return False
+        return True
+
+    def set_password(self, password):
+        self.password = make_password(password)

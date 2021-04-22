@@ -1,39 +1,13 @@
-import hashlib
 from django.shortcuts import render, redirect
 from .models import User
-
-TW_USERID_KEY = '_tw_userid'
-
-
-def make_password(password):
-    if not isinstance(password, (bytes, str)):
-        raise TypeError('Password must be a string or bytes.')
-    if isinstance(password, str):
-        password = password.encode('utf-8')
-    return hashlib.md5(password).hexdigest()
-
-
-def _login(request, userid):
-    request.session[TW_USERID_KEY] = userid
-
-
-def auth_account(request):
-    userid = request.session.get(TW_USERID_KEY)
-    if userid is None:
-        return False
-    return User.user_exists(userid)
-
-
-def get_current_account(request):
-    userid = request.session.get(TW_USERID_KEY)
-    return User.get_by_id(userid)
+from .. import auth
 
 
 def index(request):
     context = {
         'title': '首页',
     }
-    if auth_account(request):
+    if auth.is_authenticated(request):
         return redirect('user')
     return render(request, 'user/index.html', context)
 
@@ -48,17 +22,12 @@ def login(request):
         if not all([username, password]):
             context['error'] = '账户不存在或密码错误！'
         else:
-            token = make_password(password)
-            try:
-                user = User.objects.get(name=username)
-            except:
+            if not User.auth_user(username, password):
                 context['error'] = '账户不存在或密码错误！'
             else:
-                if user.token != token:
-                    context['error'] = '账户不存在或密码错误！'
-                else:
-                    _login(request, user.id)
-                    return redirect('user')
+                user = User.get_by_name(username)
+                auth.login(request, user.id)
+                return redirect('user')
     return render(request, 'user/login.html', context)
 
 
@@ -68,7 +37,7 @@ def logout(request):
     return redirect('index')
 
 
-def register(request):
+def signup(request):
     context = {
         'title': '注册',
     }
@@ -79,52 +48,45 @@ def register(request):
         if not all([username, email, password]):
             context['error'] = '注册失败'
         else:
-            token = make_password(password)
-            try:
-                user = User(
-                    name=username,
-                    email=email,
-                    token=token
-                )
-                user.save()
-            except:
+            user = User.create_user(username, email, password)
+            if user is None:
                 context['error'] = '注册失败'
             else:
-                _login(request, user.id)
+                auth.login(request, user.id)
                 return redirect('user')
     return render(request, 'user/signup.html', context)
 
 
 def user_index(request):
-    if not auth_account(request):
+    if not auth.is_authenticated(request):
         return redirect('index')
     context = {
         'title': '首页',
     }
-    account = get_current_account(request)
+    account = auth.get_current_user(request)
     context['username'] = account.name
     return render(request, 'user/user.html', context)
 
 
 def settings(request):
-    if not auth_account(request):
+    if not auth.is_authenticated(request):
         return redirect('index')
     context = {
         'title': '设置',
     }
-    account = get_current_account(request)
+    account = auth.get_current_user(request)
     context['username'] = account.name
     context['user_email'] = account.email
     return render(request, 'user/settings.html', context)
 
 
 def projects(request):
-    if not auth_account(request):
+    if not auth.is_authenticated(request):
         return redirect('index')
     context = {
         'title': '项目',
     }
-    account = get_current_account(request)
+    account = auth.get_current_user(request)
     context['username'] = account.name
     context['user_email'] = account.email
     return render(request, 'user/projects.html', context)
