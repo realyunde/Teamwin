@@ -10,7 +10,7 @@ class Project(models.Model):
     description = models.TextField()
     is_private = models.BooleanField(default=True)
     owner = models.ForeignKey(
-        'user.Account',
+        'user.User',
         on_delete=models.PROTECT,
     )
 
@@ -33,7 +33,7 @@ class Role(models.Model):
 
 class Member(models.Model):
     account = models.ForeignKey(
-        'user.Account',
+        'user.User',
         on_delete=models.PROTECT,
     )
     project = models.ForeignKey(
@@ -114,7 +114,7 @@ class WorkItem(models.Model):
         on_delete=models.SET_NULL,
     )
     assigned = models.ForeignKey(
-        'user.Account',
+        'user.User',
         null=True,
         on_delete=models.SET_NULL,
     )

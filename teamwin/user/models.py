@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Account(models.Model):
+class User(models.Model):
     name = models.CharField(
         null=False,
         unique=True,

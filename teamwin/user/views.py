@@ -1,6 +1,6 @@
 import hashlib
 from django.shortcuts import render, redirect
-from .models import Account
+from .models import User
 
 TW_USERID_KEY = '_tw_userid'
 
@@ -21,12 +21,12 @@ def auth_account(request):
     userid = request.session.get(TW_USERID_KEY)
     if userid is None:
         return False
-    return Account.user_exists(userid)
+    return User.user_exists(userid)
 
 
 def get_current_account(request):
     userid = request.session.get(TW_USERID_KEY)
-    return Account.get_by_id(userid)
+    return User.get_by_id(userid)
 
 
 def index(request):
@@ -50,7 +50,7 @@ def login(request):
         else:
             token = make_password(password)
             try:
-                user = Account.objects.get(name=username)
+                user = User.objects.get(name=username)
             except:
                 context['error'] = '账户不存在或密码错误！'
             else:
@@ -81,7 +81,7 @@ def register(request):
         else:
             token = make_password(password)
             try:
-                user = Account(
+                user = User(
                     name=username,
                     email=email,
                     token=token
