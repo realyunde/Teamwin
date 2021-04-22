@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # teamwin
-    'teamwin.account',
+    'teamwin.user',
     'teamwin.project',
 ]
 

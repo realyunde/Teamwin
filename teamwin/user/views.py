@@ -35,7 +35,7 @@ def index(request):
     }
     if auth_account(request):
         return redirect('user')
-    return render(request, 'account/index.html', context)
+    return render(request, 'user/index.html', context)
 
 
 def login(request):
@@ -59,7 +59,7 @@ def login(request):
                 else:
                     _login(request, user.id)
                     return redirect('user')
-    return render(request, 'account/login.html', context)
+    return render(request, 'user/login.html', context)
 
 
 def logout(request):
@@ -92,7 +92,7 @@ def register(request):
             else:
                 _login(request, user.id)
                 return redirect('user')
-    return render(request, 'account/signup.html', context)
+    return render(request, 'user/signup.html', context)
 
 
 def user_index(request):
@@ -103,7 +103,7 @@ def user_index(request):
     }
     account = get_current_account(request)
     context['username'] = account.name
-    return render(request, 'account/user.html', context)
+    return render(request, 'user/user.html', context)
 
 
 def settings(request):
@@ -115,7 +115,7 @@ def settings(request):
     account = get_current_account(request)
     context['username'] = account.name
     context['user_email'] = account.email
-    return render(request, 'account/settings.html', context)
+    return render(request, 'user/settings.html', context)
 
 
 def projects(request):
@@ -127,4 +127,4 @@ def projects(request):
     account = get_current_account(request)
     context['username'] = account.name
     context['user_email'] = account.email
-    return render(request, 'account/projects.html', context)
+    return render(request, 'user/projects.html', context)
