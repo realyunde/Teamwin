@@ -1,0 +1,56 @@
+{% include 'account/header.html' %}
+
+<div class="container-fluid">
+    <div class="card mx-auto" style="margin-top: 10%; max-width: 380px;">
+        <div class="card-header text-center">账号登录</div>
+        {% if error %}
+        <!-- error information -->
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            <i class="fa fa-exclamation-triangle"></i>&nbsp;{{ error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <!-- name -->
+                <div class="form-group form-row">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="fa fa-user fa-fw"></i>
+                            </div>
+                        </div>
+                        <input placeholder="用户" type="text" class="form-control" name="name"
+                               autofocus required>
+                    </div>
+                </div>
+                <!-- password -->
+                <div class="form-group form-row">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="fa fa-lock fa-fw"></i>
+                            </div>
+                        </div>
+                        <input placeholder="密码" type="password" class="form-control" name="password"
+                               required>
+                    </div>
+                </div>
+                <!-- submit -->
+                <div class="form-group form-row">
+                    <button type="submit" class="btn btn-block btn-primary mt-2">登录</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="border rounded mx-auto mt-3" style="max-width: 380px;">
+        <p class="text-center" style="margin: 10px 0 10px 0;">
+            没有账号？&nbsp;<a href="{% url 'register' %}">点此注册</a>
+        </p>
+    </div>
+</div>
+
+{% include 'account/footer.html' %}

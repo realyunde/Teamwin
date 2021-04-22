@@ -1,0 +1,22 @@
+{% include 'account/header.html' %}
+{% include 'account/user/navbar.html' %}
+<div class="container mt-sm-5">
+    <table class="table">
+        <tr>
+            <td>用户名：</td>
+            <td>{{ username }}</td>
+            <td><a href="#">修改</a></td>
+        </tr>
+        <tr>
+            <td>邮箱：</td>
+            <td>{{ user_email }}</td>
+            <td><a href="#">修改</a></td>
+        </tr>
+        <tr>
+            <td>密码：</td>
+            <td>*********</td>
+            <td><a href="#">修改</a></td>
+        </tr>
+    </table>
+</div>
+{% include 'account/footer.html' %}
