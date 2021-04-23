@@ -3,15 +3,6 @@ from .models import User
 from .. import auth
 
 
-def index(request):
-    context = {
-        'title': '首页',
-    }
-    if auth.is_authenticated(request):
-        return redirect('user')
-    return render(request, 'index.html', context)
-
-
 def login(request):
     context = {
         'title': '登录',
@@ -57,7 +48,7 @@ def signup(request):
     return render(request, 'user/signup.html', context)
 
 
-def user_index(request):
+def index(request):
     if not auth.is_authenticated(request):
         return redirect('index')
     context = {
