@@ -9,7 +9,7 @@ def index(request):
     }
     if auth.is_authenticated(request):
         return redirect('user')
-    return render(request, 'user/index.html', context)
+    return render(request, 'index.html', context)
 
 
 def login(request):
@@ -65,7 +65,7 @@ def user_index(request):
     }
     account = auth.get_current_user(request)
     context['username'] = account.name
-    return render(request, 'user/user.html', context)
+    return render(request, 'user/index.html', context)
 
 
 def settings(request):
