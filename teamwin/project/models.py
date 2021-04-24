@@ -47,8 +47,8 @@ class Member(models.Model):
     )
 
 
-# WorkItem
-class WorkItemType(models.Model):
+# Task
+class TaskType(models.Model):
     name = models.CharField(
         null=False,
         blank=False,
@@ -61,7 +61,7 @@ class WorkItemType(models.Model):
     )
 
 
-class WorkItemStatus(models.Model):
+class TaskStatus(models.Model):
     name = models.CharField(
         null=False,
         blank=False,
@@ -74,7 +74,7 @@ class WorkItemStatus(models.Model):
     )
 
 
-class WorkItemPriority(models.Model):
+class TaskPriority(models.Model):
     name = models.CharField(
         null=False,
         blank=False,
@@ -87,7 +87,7 @@ class WorkItemPriority(models.Model):
     )
 
 
-class WorkItem(models.Model):
+class Task(models.Model):
     title = models.CharField(
         null=False,
         blank=False,
@@ -99,17 +99,17 @@ class WorkItem(models.Model):
         on_delete=models.CASCADE,
     )
     _type = models.ForeignKey(
-        WorkItemType,
+        TaskType,
         null=True,
         on_delete=models.SET_NULL,
     )
     status = models.ForeignKey(
-        WorkItemStatus,
+        TaskStatus,
         null=True,
         on_delete=models.SET_NULL,
     )
     priority = models.ForeignKey(
-        WorkItemPriority,
+        TaskPriority,
         null=True,
         on_delete=models.SET_NULL,
     )
