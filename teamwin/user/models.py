@@ -50,6 +50,12 @@ class User(models.Model):
         return True
 
     @classmethod
+    def name_exists(cls, name):
+        if cls.get_by_name(name) is None:
+            return False
+        return True
+
+    @classmethod
     def email_exists(cls, email):
         try:
             user = cls.objects.get(email=email)

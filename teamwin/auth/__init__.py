@@ -8,6 +8,7 @@ def login(request, userid):
 
 
 def logout(request):
+    request.session.clear()
     request.session.flush()
 
 

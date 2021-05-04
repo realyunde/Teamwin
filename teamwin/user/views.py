@@ -3,18 +3,25 @@ from .models import User
 from .. import auth
 
 
+def user_required(handler):
+    def wrapper(request):
+        if not auth.is_authenticated(request):
+            return redirect('index')
+        return handler(request)
+
+    return wrapper
+
+
 def login(request):
-    context = {
-        'title': '登录',
-    }
+    context = {}
     if request.method == 'POST':
         username = request.POST.get('name')
         password = request.POST.get('password')
         if not all([username, password]):
-            context['error'] = '账户不存在或密码错误！'
+            context['error'] = '账户不存在或密码错误'
         else:
             if not User.auth_user(username, password):
-                context['error'] = '账户不存在或密码错误！'
+                context['error'] = '账户不存在或密码错误'
             else:
                 user = User.get_by_name(username)
                 auth.login(request, user.id)
@@ -23,61 +30,54 @@ def login(request):
 
 
 def logout(request):
-    request.session.clear()
-    request.session.flush()
+    auth.logout(request)
     return redirect('index')
 
 
 def signup(request):
-    context = {
-        'title': '注册',
-    }
+    context = {}
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         if not all([username, email, password]):
-            context['error'] = '注册失败'
+            context['error'] = '请正确填写信息'
         else:
-            try:
-                user = User.create_user(username, email, password)
-            except Exception as e:
-                context['error'] = '注册失败' + e.__str__()
+            if User.name_exists(username):
+                context['error'] = '该用户已存在'
+            elif User.email_exists(email):
+                context['error'] = '该邮箱已存在'
             else:
-                auth.login(request, user.id)
-                return redirect('user')
+                try:
+                    user = User.create_user(username, email, password)
+                except Exception as e:
+                    context['error'] = '注册失败' + e.__str__()
+                else:
+                    auth.login(request, user.id)
+                    return redirect('user')
     return render(request, 'user/signup.html', context)
 
 
+@user_required
 def index(request):
-    if not auth.is_authenticated(request):
-        return redirect('index')
-    context = {
-        'title': '首页',
-    }
+    context = {}
     account = auth.get_current_user(request)
     context['username'] = account.name
     return render(request, 'user/index.html', context)
 
 
+@user_required
 def settings(request):
-    if not auth.is_authenticated(request):
-        return redirect('index')
-    context = {
-        'title': '设置',
-    }
+    context = {}
     account = auth.get_current_user(request)
     context['username'] = account.name
     context['user_email'] = account.email
     return render(request, 'user/settings.html', context)
 
 
+@user_required
 def projects(request):
-    if not auth.is_authenticated(request):
-        return redirect('index')
-    context = {
-        'title': '项目',
-    }
+    context = {}
     account = auth.get_current_user(request)
     context['username'] = account.name
     context['user_email'] = account.email
