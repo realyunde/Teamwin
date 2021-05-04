@@ -39,9 +39,10 @@ def signup(request):
         if not all([username, email, password]):
             context['error'] = '注册失败'
         else:
-            user = User.create_user(username, email, password)
-            if user is None:
-                context['error'] = '注册失败'
+            try:
+                user = User.create_user(username, email, password)
+            except Exception as e:
+                context['error'] = '注册失败' + e.__str__()
             else:
                 auth.login(request, user.id)
                 return redirect('user')

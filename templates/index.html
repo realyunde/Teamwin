@@ -1,4 +1,11 @@
-{% include 'include/header.html' %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    {% include 'include/css.html' %}
+    <title>{{ title }}</title>
+</head>
+<body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="{% url 'index' %}">TeamWin</a>
@@ -33,4 +40,6 @@
     </form>
 </div>
 
-{% include 'include/footer.html' %}
+{% include 'include/js.html' %}
+</body>
+</html>

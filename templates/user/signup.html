@@ -1,4 +1,11 @@
-{% include 'include/header.html' %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    {% include 'include/css.html' %}
+    <title>{{ title }}</title>
+</head>
+<body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="{% url 'index' %}">TeamWin</a>
@@ -29,12 +36,12 @@
 
 <div class="container mt-5">
     {% if error %}
-    <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-        <i class="fa fa-exclamation-triangle"></i>&nbsp;{{ error }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            <i class="fa fa-exclamation-triangle"></i>&nbsp;{{ error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     {% endif %}
     <h2 class="text-center">账号注册</h2>
     <form class="mx-auto" method="post" style="max-width: 450px;">
@@ -55,4 +62,6 @@
     </form>
 </div>
 
-{% include 'include/footer.html' %}
+{% include 'include/js.html' %}
+</body>
+</html>
