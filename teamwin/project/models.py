@@ -8,7 +8,7 @@ class Project(models.Model):
         max_length=200,
     )
     description = models.TextField()
-    is_private = models.BooleanField(default=True)
+    visibility = models.BooleanField(default=True)
     owner = models.ForeignKey(
         'user.User',
         on_delete=models.PROTECT,
@@ -88,7 +88,7 @@ class TaskPriority(models.Model):
 
 
 class Task(models.Model):
-    title = models.CharField(
+    subject = models.CharField(
         null=False,
         blank=False,
         max_length=200,
