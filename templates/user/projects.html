@@ -10,20 +10,109 @@
 {% include 'user/include/navbar.html' %}
 
 <div class="container-fluid">
-    <div class="row border">
+    <div class="row my-2">
         <nav class="nav col-10">
             <a class="nav-link active" href="#">我参与的</a>
             <a class="nav-link" href="#">我管理的</a>
             <a class="nav-link" href="#">全部项目</a>
         </nav>
         <div class="col-2 my-auto">
-            <button class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newProjectModal"
+                    data-whatever="@mdo">
                 <i class="fa fa-plus"></i>&nbsp;新建项目
             </button>
+        </div>
+    </div>
+
+    {% if message %}
+        <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+
+    <!-- project list -->
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr class="form-row">
+            <th class="col text-center align-middle">项目</th>
+            <th class="col text-center align-middle">描述</th>
+            <th class="col text-center align-middle">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in project_list %}
+            <tr class="form-row">
+                <td style="word-break: break-all;" class="col text-center align-middle">{{ item.name }}</td>
+                <td style="word-break: break-all;" class="col text-center align-middle">{{ item.description }}</td>
+                <td style="word-break: break-all;" class="col text-center align-middle"><a href="/project/{{ item.id }}">{{ item.name }}</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- new project modal -->
+    <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newProjectModalLabel">新建项目</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="newProjectForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="new">
+                        <div class="form-group">
+                            <label for="newProjectName" class="col-form-label">项目名称</label>
+                            <input type="text" name="name" class="form-control" id="newProjectName">
+                        </div>
+                        <div class="form-group">
+                            <label for="newProjectDescription" class="col-form-label">项目描述</label>
+                            <textarea class="form-control" name="description" id="newProjectDescription"
+                                      rows="6"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="visibility" id="projectVisibility1"
+                                       value="public">
+                                <label class="form-check-label" for="projectVisibility1">公开</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="visibility" id="projectVisibility2"
+                                       value="private" checked>
+                                <label class="form-check-label" for="projectVisibility2">私有</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" onclick="newProject();" class="btn btn-primary">创建</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 {% include 'include/js.html' %}
+<script>
+    function newProject() {
+        let name = $.trim($("#newProjectName").val());
+        let description = $.trim($("#newProjectDescription").val());
+        if (name.length < 1) {
+            alert("请输入正确的项目名称！");
+        } else if (description.length < 1) {
+            alert("请输入适当的项目描述！");
+        } else {
+            $("#newProjectForm").submit();
+        }
+    }
+</script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import User
+from ..project.models import Project
 from .. import auth
 
 
@@ -79,6 +80,32 @@ def settings(request):
 def projects(request):
     context = {}
     account = auth.get_current_user(request)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        print(request.POST)
+        if action == 'new':
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+            visibility = request.POST.get('visibility')
+            if visibility == 'public':
+                visibility = True
+            elif visibility == 'private':
+                visibility = False
+            try:
+                project = Project.objects.create(
+                    name=name,
+                    description=description,
+                    owner=account,
+                    visibility=visibility,
+                )
+            except Exception as e:
+                context['message'] = '新建项目失败！' + e.__str__()
+            else:
+                context['message'] = '新建项目成功！'
+    project_list = Project.objects.filter(
+        owner=account,
+    )
     context['username'] = account.name
     context['user_email'] = account.email
+    context['project_list'] = project_list
     return render(request, 'user/projects.html', context)

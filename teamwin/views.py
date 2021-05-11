@@ -3,9 +3,7 @@ from . import auth
 
 
 def index(request):
-    context = {
-        'title': '首页',
-    }
+    context = {}
     if auth.is_authenticated(request):
         return redirect('user')
     return render(request, 'index.html', context)
