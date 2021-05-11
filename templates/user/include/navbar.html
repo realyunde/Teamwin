@@ -17,14 +17,16 @@
                 <i class="fa fa-user"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdown">
-                <span class="dropdown-item-text">{{ username }}</span>
+                <a class="dropdown-item" href="{% url 'user' %}">
+                    <i class="fa fa-fw fa-home"></i>&nbsp;{{ username }}
+                </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'user_settings' %}">
-                    <i class="fa fa-cog"></i>&nbsp;设置
+                    <i class="fa fa-fw fa-cog"></i>&nbsp;设置
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'user_logout' %}">
-                    <i class="fa fa-sign-out-alt"></i>&nbsp;退出
+                    <i class="fa fa-fw fa-sign-out-alt"></i>&nbsp;退出
                 </a>
             </div>
         </div>
