@@ -7,10 +7,20 @@ class Project(models.Model):
         blank=False,
         max_length=200,
     )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
     description = models.TextField()
-    visibility = models.BooleanField(default=True)
+    visibility = models.BooleanField()
     owner = models.ForeignKey(
         'user.User',
+        on_delete=models.PROTECT,
+    )
+    master = models.ForeignKey(
+        'user.User',
+        null=True,
+        default=None,
+        related_name='master',
         on_delete=models.PROTECT,
     )
 

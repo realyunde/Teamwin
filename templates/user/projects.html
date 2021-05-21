@@ -9,49 +9,96 @@
 
 {% include 'user/include/navbar.html' %}
 
-<div class="container-fluid">
-    <div class="row my-2">
-        <nav class="nav col-10">
-            <a class="nav-link active" href="#">我参与的</a>
-            <a class="nav-link" href="#">我管理的</a>
-            <a class="nav-link" href="#">全部项目</a>
-        </nav>
-        <div class="col-2 my-auto">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newProjectModal"
-                    data-whatever="@mdo">
-                <i class="fa fa-plus"></i>&nbsp;新建项目
-            </button>
-        </div>
-    </div>
-
+<div class="container mt-3">
     {% if message %}
-        <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+        <div class="alert alert-warning alert-dismissible fade show text-center mt-3" role="alert">
             <strong>{{ message }}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
     {% endif %}
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+               aria-selected="true">全部项目</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+               aria-controls="profile" aria-selected="false">我的项目</a>
+        </li>
+        <li class="nav-item ml-2">
+            <button type="button" class="btn border-dark" data-toggle="modal" data-target="#newProjectModal">
+                <i class="fa fa-plus"></i>&nbsp;新建
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row mt-3 text-center">
+                <div class="col my-auto mx-auto text-center" style="max-width: 75%">
+                    <form method="get">
+                        <input class="form-control form-control-sm" type="text" name="kw">
+                    </form>
+                </div>
+            </div>
 
-    <!-- project list -->
-    <table class="table table-hover table-striped">
-        <thead>
-        <tr class="form-row">
-            <th class="col text-center align-middle">项目</th>
-            <th class="col text-center align-middle">描述</th>
-            <th class="col text-center align-middle">操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for item in project_list %}
-            <tr class="form-row">
-                <td style="word-break: break-all;" class="col text-center align-middle">{{ item.name }}</td>
-                <td style="word-break: break-all;" class="col text-center align-middle">{{ item.description }}</td>
-                <td style="word-break: break-all;" class="col text-center align-middle"><a href="/project/{{ item.id }}">{{ item.name }}</a></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            {% for item in public_projects %}
+                <div class="card border-dark my-3 mx-auto">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                项目负责人：{{ item.owner.name }}
+                            </div>
+                            <div class="col">
+                                创建时间：{{ item.created }}
+                            </div>
+                            <div class="col">
+                                成员人数：100
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><a class="card-link" href="#">{{ item.name }}</a></h5>
+                        <p class="card-text">{{ item.description }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="row mt-3 text-center">
+                <div class="col my-auto mx-auto text-center" style="max-width: 75%">
+                    <form method="get">
+                        <input class="form-control form-control-sm" type="text" name="kw">
+                    </form>
+                </div>
+            </div>
+            <!-- project list -->
+            {% for item in project_list %}
+                <div class="card border-dark my-3 mx-auto">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                创建时间：{{ item.created }}
+                            </div>
+                            <div class="col text-center">
+                                成员人数：100
+                            </div>
+                            <div class="col text-right">
+                                {% if not item.visibility %}
+                                    <i class="fa fa-lock fa-fw"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><a class="card-link" href="#">{{ item.name }}</a></h5>
+                        <p class="card-text">{{ item.description }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
     <!-- new project modal -->
     <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel"

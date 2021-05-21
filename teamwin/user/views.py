@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from .models import User
 from ..project.models import Project
 from .. import auth
@@ -92,7 +93,7 @@ def projects(request):
             elif visibility == 'private':
                 visibility = False
             try:
-                project = Project.objects.create(
+                Project.objects.create(
                     name=name,
                     description=description,
                     owner=account,
@@ -102,10 +103,14 @@ def projects(request):
                 context['message'] = '新建项目失败！' + e.__str__()
             else:
                 context['message'] = '新建项目成功！'
-    project_list = Project.objects.filter(
+    projects = Project.objects.filter(
         owner=account,
+    )
+    public_projects = Project.objects.filter(
+        visibility=True,
     )
     context['username'] = account.name
     context['user_email'] = account.email
-    context['project_list'] = project_list
+    context['project_list'] = projects
+    context['public_projects'] = public_projects
     return render(request, 'user/projects.html', context)
