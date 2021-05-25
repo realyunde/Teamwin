@@ -81,4 +81,5 @@ class User(models.Model):
         )
 
     def set_password(self, password):
-        self.password = make_token(password)
+        self.token = make_token(password)
+        self.save()

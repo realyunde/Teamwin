@@ -46,6 +46,32 @@ def signup(request):
 def settings(request):
     context = {}
     account = auth.get_current_user(request)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'updateName':
+            new_username = request.POST.get('newUsername')
+            if User.name_exists(new_username):
+                context['message'] = '该用户名已存在！'
+            else:
+                account.name = new_username
+                account.save()
+                context['message'] = '已修改！'
+        elif action == 'updateEmail':
+            new_email = request.POST.get('newEmail')
+            if User.email_exists(new_email):
+                context['message'] = '该邮箱已存在！'
+            else:
+                account.email = new_email
+                account.save()
+                context['message'] = '已修改！'
+        elif action == 'updatePassword':
+            password = request.POST.get('oldPassword')
+            new_password = request.POST.get('newPassword')
+            if User.auth_user(account.name, password):
+                account.set_password(new_password)
+                context['message'] = '已修改！'
+            else:
+                context['message'] = '原密码错误！'
     context['username'] = account.name
     context['user_email'] = account.email
     return render(request, 'user/settings.html', context)

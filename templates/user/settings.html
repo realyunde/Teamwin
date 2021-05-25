@@ -10,6 +10,14 @@
 {% include 'user/include/navbar.html' %}
 
 <div class="container mt-sm-5">
+    {% if message %}
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            <i class="fa fa-exclamation-triangle"></i>&nbsp;{{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
     <table class="table text-center">
         <tr class="row">
             <td class="col">用户：</td>
@@ -55,19 +63,20 @@
             <div class="modal-body">
                 <form method="post" id="updateUsernameForm">
                     {% csrf_token %}
+                    <input type="hidden" name="action" value="updateName">
                     <div class="form-group">
                         <label for="oldUsername" class="col-form-label">原用户</label>
                         <input type="text" class="form-control" id="oldUsername" value="{{ username }}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="newUsername" class="col-form-label">新用户</label>
-                        <input type="text" class="form-control" id="newUsername">
+                        <input type="text" name="newUsername" class="form-control" id="newUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">修改</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" onclick="updateUsername();">修改</button>
             </div>
         </div>
     </div>
@@ -87,19 +96,20 @@
             <div class="modal-body">
                 <form method="post" id="updateUserEmailForm">
                     {% csrf_token %}
+                    <input type="hidden" name="action" value="updateEmail">
                     <div class="form-group">
                         <label for="oldUserEmail" class="col-form-label">原邮箱</label>
                         <input type="email" class="form-control" id="oldUserEmail" value="{{ user_email }}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="newUserEmail" class="col-form-label">新邮箱</label>
-                        <input type="email" class="form-control" id="newUserEmail">
+                        <input type="email" name="newEmail" class="form-control" id="newUserEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">修改</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" onclick="updateUserEmail();">修改</button>
             </div>
         </div>
     </div>
@@ -119,39 +129,26 @@
             <div class="modal-body">
                 <form method="post" id="updateUserPasswordForm">
                     {% csrf_token %}
+                    <input type="hidden" name="action" value="updatePassword">
                     <div class="form-group">
                         <label for="oldPassword" class="col-form-label">原密码</label>
-                        <input type="text" class="form-control" id="oldPassword">
+                        <input type="text" name="oldPassword" class="form-control" id="oldPassword" required>
                     </div>
                     <div class="form-group">
                         <label for="newPassword" class="col-form-label">新密码</label>
-                        <input type="text" class="form-control" id="newPassword">
+                        <input type="text" name="newPassword" class="form-control" id="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">修改</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" onclick="updateUserPassword();">修改</button>
             </div>
         </div>
     </div>
 </div>
 
-
 {% include 'include/js.html' %}
 
-<script>
-    function updateUsername() {
-        $("#updateUsernameForm").submit();
-    }
-
-    function updateUserEmail() {
-        $("#updateUserEmailForm").submit();
-    }
-
-    function updateUserPassword() {
-        $("#updateUserPasswordForm").submit();
-    }
-</script>
 </body>
 </html>
