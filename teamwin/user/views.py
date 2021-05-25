@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.db.models import Q
 from .models import User
 from ..project.models import Project
 from .. import auth
@@ -103,7 +102,7 @@ def projects(request):
                 context['message'] = '新建项目失败！' + e.__str__()
             else:
                 context['message'] = '新建项目成功！'
-    projects = Project.objects.filter(
+    my_projects = Project.objects.filter(
         owner=account,
     )
     public_projects = Project.objects.filter(
@@ -111,6 +110,6 @@ def projects(request):
     )
     context['username'] = account.name
     context['user_email'] = account.email
-    context['project_list'] = projects
+    context['project_list'] = my_projects
     context['public_projects'] = public_projects
     return render(request, 'user/projects.html', context)

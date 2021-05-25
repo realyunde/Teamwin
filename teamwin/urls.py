@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('user/', include('teamwin.user.urls')),
+    path('project/', include('teamwin.project.urls')),
 ]

@@ -1,6 +1,7 @@
 from django.db import models
 
 
+# Project
 class Project(models.Model):
     name = models.CharField(
         null=False,
@@ -15,34 +16,19 @@ class Project(models.Model):
     owner = models.ForeignKey(
         'user.User',
         on_delete=models.PROTECT,
+        related_name='product_owner',
     )
     master = models.ForeignKey(
         'user.User',
         null=True,
         default=None,
-        related_name='master',
         on_delete=models.PROTECT,
+        related_name='scrum_master',
     )
 
 
-class Role(models.Model):
-    name = models.CharField(
-        null=False,
-        blank=False,
-        max_length=200,
-    )
-    project = models.ForeignKey(
-        Project,
-        on_delete=models.CASCADE,
-    )
-    permissions = models.TextField(
-        null=True,
-        blank=True,
-    )
-
-
-class Member(models.Model):
-    account = models.ForeignKey(
+class Developer(models.Model):
+    user = models.ForeignKey(
         'user.User',
         on_delete=models.PROTECT,
     )
@@ -50,11 +36,21 @@ class Member(models.Model):
         Project,
         on_delete=models.CASCADE,
     )
-    role = models.ForeignKey(
-        Role,
-        null=True,
-        on_delete=models.SET_NULL,
+
+    class Meta:
+        unique_together = ('user', 'project')
+
+
+# Sprint
+class Sprint(models.Model):
+    name = models.CharField(
+        null=False,
+        blank=False,
+        max_length=200,
     )
+    goal = models.TextField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
 
 # Task

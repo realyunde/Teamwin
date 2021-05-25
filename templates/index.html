@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     {% include 'include/css.html' %}
-    <title>TeamWin</title>
+    <title>项目协作与共享平台</title>
 </head>
 <body>
 
@@ -31,7 +31,9 @@
         <div class="card border-dark my-3 mx-auto">
             <div class="card-header">创建时间：{{ item.created }}</div>
             <div class="card-body">
-                <h5 class="card-title"><a class="card-link" href="#">{{ item.name }}</a></h5>
+                <h5 class="card-title">
+                    <a class="card-link" href="{% url 'project_index' item.id %}">{{ item.name }}</a>
+                </h5>
                 <p class="card-text">{{ item.description }}</p>
             </div>
         </div>
