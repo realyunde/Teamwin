@@ -60,14 +60,6 @@ def signup(request):
 
 
 @user_required
-def index(request):
-    context = {}
-    account = auth.get_current_user(request)
-    context['username'] = account.name
-    return render(request, 'user/index.html', context)
-
-
-@user_required
 def settings(request):
     context = {}
     account = auth.get_current_user(request)
@@ -77,7 +69,7 @@ def settings(request):
 
 
 @user_required
-def projects(request):
+def index(request):
     context = {}
     account = auth.get_current_user(request)
     if request.method == 'POST':
@@ -112,4 +104,4 @@ def projects(request):
     context['user_email'] = account.email
     context['project_list'] = my_projects
     context['public_projects'] = public_projects
-    return render(request, 'user/projects.html', context)
+    return render(request, 'user/index.html', context)

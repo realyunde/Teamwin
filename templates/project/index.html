@@ -3,9 +3,39 @@
 <head>
     <meta charset="utf-8">
     {% include 'include/css.html' %}
-    <title>TeamWin</title>
+    <title>项目</title>
 </head>
 <body>
+{% include 'project/include/navbar.html' %}
+
+<div class="container">
+    <table class="table table-hover table-borderless table-striped">
+        <tr>
+            <td>{{ project.name }}</td>
+            <td>{{ project.description }}</td>
+        </tr>
+        <tr>
+            <td>项目负责人</td>
+            <td>{{ project.owner.name }}</td>
+        </tr>
+        <tr>
+            <td>敏捷教练</td>
+            {% if project.master %}
+                <td>{{ project.master.name }}</td>
+            {% else %}
+                <td class="text-danger">无</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td>开发人员</td>
+            <td>
+                {% for item in developer_list %}
+                    {{ item.name }}
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+</div>
 
 {% include 'include/js.html' %}
 </body>
