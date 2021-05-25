@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    {% include 'include/css.html' %}
+    <title>项目</title>
+</head>
+<body>
+{% include 'project/include/navbar.html' %}
+
+<div class="container">
+    <form method="post" id="settingForm">
+        {% csrf_token %}
+        <input id="formAction" type="hidden" name="action" value="update">
+        <input type="hidden" name="projectId" value="{{ project_id }}">
+        <div class="form-group">
+            <label for="newProjectName" class="col-form-label">项目名称</label>
+            <input type="text" name="name" class="form-control" id="newProjectName">
+        </div>
+        <div class="form-group">
+            <label for="newProjectDescription" class="col-form-label">项目描述</label>
+            <textarea class="form-control" name="description" id="newProjectDescription"
+                      rows="6"></textarea>
+        </div>
+        <div class="form-group">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="visibility" id="projectVisibility1"
+                       value="public">
+                <label class="form-check-label" for="projectVisibility1">公开</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="visibility" id="projectVisibility2"
+                       value="private" checked>
+                <label class="form-check-label" for="projectVisibility2">私有</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+                <div class="col text-right">
+                    <button type="button" onclick="deleteProject();" class="btn btn-danger">删除此项目</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% include 'include/js.html' %}
+<script>
+    function deleteProject() {
+        if (confirm("确定要删除此项目吗？")) {
+            $("#formAction").val("delete");
+            $("#settingForm").submit();
+        }
+    }
+</script>
+</body>
+</html>

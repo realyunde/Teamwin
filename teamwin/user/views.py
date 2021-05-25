@@ -13,23 +13,6 @@ def user_required(handler):
     return wrapper
 
 
-def login(request):
-    context = {}
-    if request.method == 'POST':
-        username = request.POST.get('name')
-        password = request.POST.get('password')
-        if not all([username, password]):
-            context['error'] = '账户不存在或密码错误'
-        else:
-            if not User.auth_user(username, password):
-                context['error'] = '账户不存在或密码错误'
-            else:
-                user = User.get_by_name(username)
-                auth.login(request, user.id)
-                return redirect('user')
-    return render(request, 'user/login.html', context)
-
-
 def logout(request):
     auth.logout(request)
     return redirect('index')

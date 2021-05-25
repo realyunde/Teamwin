@@ -16,28 +16,61 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto"></ul>
-        <a class="btn" href="{% url 'user_login' %}">登录</a>
+        <a class="btn" href="{% url 'index' %}">登录</a>
         <a class="btn btn-outline-primary" href="{% url 'user_signup' %}">注册</a>
     </div>
 </nav>
 
 <div class="container mt-5">
-    <form class="mb-4" method="get">
-        <input class="form-control" type="search" placeholder="搜索" name="kw" aria-label="Search">
-    </form>
-
-    <!-- project list -->
-    {% for item in projects %}
-        <div class="card border-dark my-3 mx-auto">
-            <div class="card-header">创建时间：{{ item.created }}</div>
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a class="card-link" href="{% url 'project_index' item.id %}">{{ item.name }}</a>
-                </h5>
-                <p class="card-text">{{ item.description }}</p>
-            </div>
+    <div class="card mx-auto" style="margin-top: 10%; max-width: 380px;">
+        <div class="card-header text-center">账号登录</div>
+        <div class="card-body">
+            {% if error %}
+                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                    <i class="fa fa-exclamation-triangle"></i>&nbsp;{{ error }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+            <form method="POST">
+                {% csrf_token %}
+                <!-- name -->
+                <div class="form-group form-row">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="fa fa-user fa-fw"></i>
+                            </div>
+                        </div>
+                        <input placeholder="用户" type="text" class="form-control" name="name"
+                               autofocus required>
+                    </div>
+                </div>
+                <!-- password -->
+                <div class="form-group form-row">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="fa fa-lock fa-fw"></i>
+                            </div>
+                        </div>
+                        <input placeholder="密码" type="password" class="form-control" name="password"
+                               required>
+                    </div>
+                </div>
+                <!-- submit -->
+                <div class="form-group form-row">
+                    <button type="submit" class="btn btn-block btn-primary mt-2">登录</button>
+                </div>
+            </form>
         </div>
-    {% endfor %}
+    </div>
+    <div class="border rounded mx-auto mt-3" style="max-width: 380px;">
+        <p class="text-center" style="margin: 10px 0 10px 0;">
+            没有账号？&nbsp;<a href="{% url 'user_signup' %}">点此注册</a>
+        </p>
+    </div>
 </div>
 {% include 'include/js.html' %}
 </body>
