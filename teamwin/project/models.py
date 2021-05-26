@@ -123,3 +123,15 @@ class Task(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+
+
+# Share
+class SharedFile(models.Model):
+    name = models.CharField(max_length=254)
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+    )

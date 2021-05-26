@@ -142,3 +142,6 @@ cython_debug/
 
 # ignore migrations on development env
 migrations/
+
+# ignore upload files
+/storage

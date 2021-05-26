@@ -129,3 +129,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+
+# Teamwin
+TEAMWIN_STORAGE_DIR = str(BASE_DIR / 'storage')

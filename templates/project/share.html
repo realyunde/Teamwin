@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    {% include 'include/css.html' %}
+    <title>项目 | 共享</title>
+</head>
+<body>
+{% include 'project/include/navbar.html' %}
+
+<div class="container">
+    <div>
+        <div class="row">
+            <div class="col">
+                <h5>文件共享</h5>
+            </div>
+            <div class="col text-right">
+                <button type="button" class="btn" onclick="openFileBrowser();">
+                    <i class="fa fa-arrow-alt-circle-up"></i>&nbsp;上传
+                </button>
+                <form id="uploadFileForm" method="post" class="d-none" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="uploadFile">
+                    <input id="uploadFileInput" type="file" name="uploadFile" onchange="uploadFileToServer();">
+                </form>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <td>名称</td>
+                <td>大小</td>
+                <td>上传时间</td>
+                <td>操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% if files %}
+                {% for item in files %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.filesize }}</td>
+                        <td>{{ item.created | date:"Y-m-d H:i:s" }}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary"
+                                    onclick="downloadUploadFile('{{ item.id }}');">
+                                <i class="fa fa-arrow-alt-circle-down fa-fw"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger"
+                                    onclick="deleteUploadFile('{{ item.id }}');">
+                                <i class="fa fa-trash-alt fa-fw"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-danger text-center">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;还未上传文件！
+                    </td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- hidden forms -->
+    <form class="d-none" id="deleteFileForm" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="deleteFile">
+        <input id="deleteFormFileId" type="hidden" name="fileId" value="">
+    </form>
+    <form class="d-none" id="downloadFileForm" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="downloadFile">
+        <input id="downloadFormFileId" type="hidden" name="fileId" value="">
+    </form>
+</div>
+{% include 'include/js.html' %}
+<script>
+    function openFileBrowser() {
+        $("#uploadFileInput").click();
+    }
+
+    function uploadFileToServer() {
+        $("#uploadFileForm").submit();
+    }
+
+    function deleteUploadFile(fileId) {
+        if (confirm("确定删除此文件吗？")) {
+            $("#deleteFormFileId").val(fileId);
+            $("#deleteFileForm").submit();
+        }
+    }
+
+    function downloadUploadFile(fileId) {
+        $("#downloadFormFileId").val(fileId);
+        $("#downloadFileForm").submit();
+    }
+</script>
+</body>
+</html>
