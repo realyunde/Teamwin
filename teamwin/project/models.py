@@ -12,7 +12,6 @@ class Project(models.Model):
         auto_now_add=True,
     )
     description = models.TextField()
-    visibility = models.BooleanField()
     owner = models.ForeignKey(
         'user.User',
         on_delete=models.PROTECT,

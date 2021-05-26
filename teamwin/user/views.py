@@ -87,30 +87,20 @@ def index(request):
         if action == 'new':
             name = request.POST.get('name')
             description = request.POST.get('description')
-            visibility = request.POST.get('visibility')
-            if visibility == 'public':
-                visibility = True
-            elif visibility == 'private':
-                visibility = False
             try:
                 Project.objects.create(
                     name=name,
-                    description=description,
                     owner=account,
-                    visibility=visibility,
+                    description=description,
                 )
             except Exception as e:
                 context['message'] = '新建项目失败！' + e.__str__()
             else:
                 context['message'] = '新建项目成功！'
-    my_projects = Project.objects.filter(
+    projects = Project.objects.filter(
         owner=account,
-    )
-    public_projects = Project.objects.filter(
-        visibility=True,
     )
     context['username'] = account.name
     context['user_email'] = account.email
-    context['project_list'] = my_projects
-    context['public_projects'] = public_projects
+    context['project_list'] = projects
     return render(request, 'user/index.html', context)
