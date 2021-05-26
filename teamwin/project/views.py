@@ -8,6 +8,16 @@ from .models import Project, Developer, SharedFile
 from .. import auth
 
 
+def user_required(handler):
+    def wrapper(request, project_id):
+        if not auth.is_authenticated(request):
+            return redirect('index')
+        return handler(request, project_id)
+
+    return wrapper
+
+
+@user_required
 def index(request, project_id):
     context = {
         'project_id': project_id,
@@ -21,6 +31,7 @@ def index(request, project_id):
     return render(request, 'project/index.html', context)
 
 
+@user_required
 def project_share(request, project_id):
     context = {
         'project_id': project_id,
@@ -60,6 +71,7 @@ def project_share(request, project_id):
     return render(request, 'project/share.html', context)
 
 
+@user_required
 def project_settings(request, project_id):
     context = {
         'project_id': project_id,
