@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    {% include 'include/css.html' %}
+    <title>项目</title>
+</head>
+<body>
+{% include 'project/include/navbar.html' %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>代办事项</h5>
+        </div>
+        <div class="col text-right">
+            <button type="button" class="btn" data-toggle="modal"
+                    data-target="#newProjectModal">
+                <i class="fa fa-plus-circle"></i>&nbsp;新建事项
+            </button>
+        </div>
+    </div>
+
+    {% for item in tasks %}
+        <div class="card border-dark mt-2 mx-auto">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col text-left">
+                        {{ item.subject }}
+                    </div>
+                    <div class="col text-center">
+                        创建时间：{{ item.created | date:"Y-m-d H:i:s" }}
+                    </div>
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-sm btn-primary rounded-pill" data-toggle="modal"
+                                data-target="#editTaskModal"
+                                onclick="console.log('{{ item.id }}');">
+                            <i class="fa fa-edit fa-fw"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger rounded-pill"
+                                onclick="deleteTask('{{ item.id }}');">
+                            <i class="fa fa-trash-alt fa-fw"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ item.description }}</p>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newProjectModalLabel">新建事项</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="newTask">
+                        <div class="form-group">
+                            <label for="newTaskSubject" class="col-form-label">主题</label>
+                            <input type="text" name="taskSubject" class="form-control" id="newTaskSubject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newTaskDescription" class="col-form-label">描述</label>
+                            <textarea class="form-control" name="taskDescription" id="newTaskDescription"
+                                      rows="6" required></textarea>
+                        </div>
+                        <div class="form-group text-right">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary">创建</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTaskModalLabel">编辑事项</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="updateTask">
+                        <div class="form-group">
+                            <label for="editTaskSubject" class="col-form-label">主题</label>
+                            <input type="text" name="taskSubject" class="form-control" id="editTaskSubject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTaskDescription" class="col-form-label">描述</label>
+                            <textarea class="form-control" name="taskDescription" id="editTaskDescription"
+                                      rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTaskAssigned" class="col-form-label">负责人</label>
+                            <select class="custom-select" id="editTaskAssigned">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTaskSprint" class="col-form-label">所属迭代</label>
+                            <select class="custom-select" id="editTaskSprint">
+                            </select>
+                        </div>
+                        <div class="form-group text-right">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary">保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- hidden form -->
+    <form class="d-none" id="deleteTaskForm" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="deleteTask">
+        <input id="deleteFormTaskId" type="hidden" name="taskId" value="">
+    </form>
+</div>
+{% include 'include/js.html' %}
+<script>
+    function deleteTask(id) {
+        if (confirm("确定删除此事项吗？")) {
+            $("#deleteFormTaskId").val(id);
+            $("#deleteTaskForm").submit();
+        }
+    }
+</script>
+</body>
+</html>

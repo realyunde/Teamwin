@@ -8,10 +8,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">代办</a>
+                <a class="nav-link" href="{% url 'project_backlog' project_id %}">代办</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="#">迭代</a>
+                <a class="nav-link" href="{% url 'project_sprint' project_id %}">迭代</a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="#">团队</a>

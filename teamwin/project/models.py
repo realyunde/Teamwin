@@ -48,47 +48,12 @@ class Sprint(models.Model):
         max_length=200,
     )
     goal = models.TextField()
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-
-
-# Task
-class TaskType(models.Model):
-    name = models.CharField(
-        null=False,
-        blank=False,
-        max_length=200,
+    created = models.DateTimeField(
+        auto_now_add=True,
     )
-    description = models.TextField()
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
-    )
-
-
-class TaskStatus(models.Model):
-    name = models.CharField(
-        null=False,
-        blank=False,
-        max_length=200,
-    )
-    description = models.TextField()
-    project = models.ForeignKey(
-        Project,
-        on_delete=models.CASCADE,
-    )
-
-
-class TaskPriority(models.Model):
-    name = models.CharField(
-        null=False,
-        blank=False,
-        max_length=200,
-    )
-    description = models.TextField()
-    project = models.ForeignKey(
-        Project,
-        on_delete=models.CASCADE
     )
 
 
@@ -99,28 +64,28 @@ class Task(models.Model):
         max_length=200,
     )
     description = models.TextField()
+    status = models.CharField(
+        max_length=10,
+        default='todo',
+        choices=(('todo', 'ToDo'), ('doing', 'Doing'), ('done', 'Done')),
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
     )
-    _type = models.ForeignKey(
-        TaskType,
+    sprint = models.ForeignKey(
+        Sprint,
         null=True,
-        on_delete=models.SET_NULL,
-    )
-    status = models.ForeignKey(
-        TaskStatus,
-        null=True,
-        on_delete=models.SET_NULL,
-    )
-    priority = models.ForeignKey(
-        TaskPriority,
-        null=True,
+        default=None,
         on_delete=models.SET_NULL,
     )
     assigned = models.ForeignKey(
         'user.User',
         null=True,
+        default=None,
         on_delete=models.SET_NULL,
     )
 
@@ -128,6 +93,8 @@ class Task(models.Model):
 # Share
 class SharedFile(models.Model):
     name = models.CharField(max_length=254)
+    path = models.CharField(max_length=64)
+    filesize = models.IntegerField()
     created = models.DateTimeField(
         auto_now_add=True,
     )

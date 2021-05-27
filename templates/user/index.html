@@ -19,46 +19,37 @@
         </div>
     {% endif %}
 
-    <div class="card border-dark">
-        <div class="card-header">
-            <div class="row">
-                <div class="col my-auto">我的项目</div>
-                <div class="col my-auto text-right">
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newProjectModal">
-                        <i class="fa fa-plus"></i>&nbsp;新建
-                    </button>
-                </div>
-            </div>
+    <div class="row mb-2">
+        <div class="col text-left">
+            <h5>我的项目</h5>
         </div>
-        <div class="card-body">
-            <!-- project list -->
-            {% for item in project_list %}
-                <div class="card border-dark my-3 mx-auto">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col">
-                                创建时间：{{ item.created | date:"Y-m-d H:i:s" }}
-                            </div>
-                            <div class="col text-center">
-                                成员人数：100
-                            </div>
-                            <div class="col text-right">
-                                {% if not item.visibility %}
-                                    <i class="fa fa-lock fa-fw"></i>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a class="card-link" href="{% url 'project_index' item.id %}">{{ item.name }}</a>
-                        </h5>
-                        <p class="card-text">{{ item.description }}</p>
-                    </div>
-                </div>
-            {% endfor %}
+        <div class="col text-right">
+            <button type="button" class="btn" data-toggle="modal"
+                    data-target="#newProjectModal">
+                <i class="fa fa-plus-circle"></i>&nbsp;新建项目
+            </button>
         </div>
     </div>
+
+    {% for item in project_list %}
+        <div class="card border-dark mb-3 mx-auto">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col text-left">
+                        <h5 class="card-title my-auto">
+                            <a class="card-link" href="{% url 'project_index' item.id %}">{{ item.name }}</a>
+                        </h5>
+                    </div>
+                    <div class="col text-right">
+                        创建时间：{{ item.created | date:"Y-m-d H:i:s" }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <pre class="card-text" style="white-space: pre-wrap;">{{ item.description }}</pre>
+            </div>
+        </div>
+    {% endfor %}
 </div>
 
 <!-- new project modal -->
@@ -78,36 +69,23 @@
                     <input type="hidden" name="action" value="new">
                     <div class="form-group">
                         <label for="newProjectName" class="col-form-label">项目名称</label>
-                        <input type="text" name="name" class="form-control" id="newProjectName">
+                        <input type="text" name="name" class="form-control" id="newProjectName" required>
                     </div>
                     <div class="form-group">
                         <label for="newProjectDescription" class="col-form-label">项目描述</label>
                         <textarea class="form-control" name="description" id="newProjectDescription"
-                                  rows="6"></textarea>
+                                  rows="6" required></textarea>
+                    </div>
+                    <div class="form-group text-right">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">创建</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" onclick="newProject();" class="btn btn-primary">创建</button>
             </div>
         </div>
     </div>
 </div>
 
 {% include 'include/js.html' %}
-<script>
-    function newProject() {
-        let name = $.trim($("#newProjectName").val());
-        let description = $.trim($("#newProjectDescription").val());
-        if (name.length < 1) {
-            alert("请输入正确的项目名称！");
-        } else if (description.length < 1) {
-            alert("请输入适当的项目描述！");
-        } else {
-            $("#newProjectForm").submit();
-        }
-    }
-</script>
 </body>
 </html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    {% include 'include/css.html' %}
+    <title>项目 | 迭代</title>
+</head>
+<body>
+{% include 'project/include/navbar.html' %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>项目迭代</h5>
+        </div>
+        <div class="col text-right">
+            <button type="button" class="btn" data-toggle="modal"
+                    data-target="#newSprintModal">
+                <i class="fa fa-plus-circle"></i>&nbsp;新建迭代
+            </button>
+        </div>
+    </div>
+
+    {% for item in sprints %}
+        <div class="card border-dark mt-2 mx-auto">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col text-left">
+                        {{ item.name }}
+                    </div>
+                    <div class="col text-right">
+                        创建时间：{{ item.created | date:"Y-m-d H:i:s" }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ item.goal }}</p>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="modal fade" id="newSprintModal" tabindex="-1" aria-labelledby="newSprintModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newSprintModalLabel">新建迭代</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="newSprint">
+                        <div class="form-group">
+                            <label for="newSprintName" class="col-form-label">迭代名称</label>
+                            <input type="text" name="sprintName" class="form-control" id="newSprintName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newSprintGoal" class="col-form-label">迭代目标</label>
+                            <textarea class="form-control" name="sprintGoal" id="newSprintGoal"
+                                      rows="6" required></textarea>
+                        </div>
+                        <div class="form-group text-right">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary">创建</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'include/js.html' %}
+</body>
+</html>

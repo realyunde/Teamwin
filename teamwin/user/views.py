@@ -83,7 +83,6 @@ def index(request):
     account = auth.get_current_user(request)
     if request.method == 'POST':
         action = request.POST.get('action')
-        print(request.POST)
         if action == 'new':
             name = request.POST.get('name')
             description = request.POST.get('description')
