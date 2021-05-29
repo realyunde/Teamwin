@@ -130,5 +130,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
+STATIC_ROOT = BASE_DIR / 'static_files'
+
 # Teamwin
 TEAMWIN_STORAGE_DIR = str(BASE_DIR / 'storage')
