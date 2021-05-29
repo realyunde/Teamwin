@@ -18,10 +18,10 @@
             </button>
         </div>
     {% endif %}
-    <table class="table text-center">
+    <table class="table">
         <tr class="row">
-            <td class="col">用户：</td>
-            <td class="col">{{ username }}</td>
+            <td class="col text-center">用户</td>
+            <td class="col">{{ user.name }}</td>
             <td class="col">
                 <button type="button" class="btn" data-toggle="modal" data-target="#updateUsernameModal">
                     <i class="fa fa-edit text-danger"></i>
@@ -29,8 +29,8 @@
             </td>
         </tr>
         <tr class="row">
-            <td class="col">邮箱：</td>
-            <td class="col">{{ user_email }}</td>
+            <td class="col text-center">邮箱</td>
+            <td class="col">{{ user.email }}</td>
             <td class="col">
                 <button type="button" class="btn" data-toggle="modal" data-target="#updateUserEmailModal">
                     <i class="fa fa-edit text-danger"></i>
@@ -38,7 +38,7 @@
             </td>
         </tr>
         <tr class="row">
-            <td class="col">密码：</td>
+            <td class="col text-center">密码</td>
             <td class="col">*********</td>
             <td class="col">
                 <button type="button" class="btn" data-toggle="modal" data-target="#updateUserPasswordModal">
@@ -66,7 +66,7 @@
                     <input type="hidden" name="action" value="updateName">
                     <div class="form-group">
                         <label for="oldUsername" class="col-form-label">原用户</label>
-                        <input type="text" class="form-control" id="oldUsername" value="{{ username }}" readonly>
+                        <input type="text" class="form-control" id="oldUsername" value="{{ user.name }}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="newUsername" class="col-form-label">新用户</label>
@@ -99,7 +99,7 @@
                     <input type="hidden" name="action" value="updateEmail">
                     <div class="form-group">
                         <label for="oldUserEmail" class="col-form-label">原邮箱</label>
-                        <input type="email" class="form-control" id="oldUserEmail" value="{{ user_email }}" readonly>
+                        <input type="email" class="form-control" id="oldUserEmail" value="{{ user.email }}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="newUserEmail" class="col-form-label">新邮箱</label>

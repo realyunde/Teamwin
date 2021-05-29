@@ -45,7 +45,7 @@ def signup(request):
 @user_required
 def settings(request):
     context = {}
-    account = auth.get_current_user(request)
+    user = auth.get_current_user(request)
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'updateName':
@@ -53,34 +53,33 @@ def settings(request):
             if User.name_exists(new_username):
                 context['message'] = '该用户名已存在！'
             else:
-                account.name = new_username
-                account.save()
+                user.name = new_username
+                user.save()
                 context['message'] = '已修改！'
         elif action == 'updateEmail':
             new_email = request.POST.get('newEmail')
             if User.email_exists(new_email):
                 context['message'] = '该邮箱已存在！'
             else:
-                account.email = new_email
-                account.save()
+                user.email = new_email
+                user.save()
                 context['message'] = '已修改！'
         elif action == 'updatePassword':
             password = request.POST.get('oldPassword')
             new_password = request.POST.get('newPassword')
-            if User.auth_user(account.name, password):
-                account.set_password(new_password)
+            if User.auth_user(user.name, password):
+                user.set_password(new_password)
                 context['message'] = '已修改！'
             else:
                 context['message'] = '原密码错误！'
-    context['username'] = account.name
-    context['user_email'] = account.email
+    context['user'] = user
     return render(request, 'user/settings.html', context)
 
 
 @user_required
 def index(request):
     context = {}
-    account = auth.get_current_user(request)
+    user = auth.get_current_user(request)
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'new':
@@ -89,7 +88,7 @@ def index(request):
             try:
                 Project.objects.create(
                     name=name,
-                    owner=account,
+                    owner=user,
                     description=description,
                 )
             except Exception as e:
@@ -97,9 +96,8 @@ def index(request):
             else:
                 context['message'] = '新建项目成功！'
     projects = Project.objects.filter(
-        owner=account,
+        owner=user,
     )
-    context['username'] = account.name
-    context['user_email'] = account.email
-    context['project_list'] = projects
+    context['user'] = user
+    context['projects'] = projects
     return render(request, 'user/index.html', context)

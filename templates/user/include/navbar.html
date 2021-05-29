@@ -14,7 +14,7 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="{% url 'user' %}">
-                    <i class="fa fa-fw fa-home"></i><br>{{ username }}
+                    <i class="fa fa-fw fa-home"></i><br>{{ user.name }}
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'user_settings' %}">

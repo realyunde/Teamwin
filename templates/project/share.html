@@ -10,11 +10,9 @@
 
 <div class="container">
     <div class="row">
-        <div class="col">
-            <h5>文件共享</h5>
-        </div>
-        <div class="col text-right">
-            <button type="button" class="btn" onclick="openFileBrowser();">
+        <div class="col my-auto text-left">文件共享</div>
+        <div class="col my-auto text-right">
+            <button type="button" class="btn p-0" onclick="openFileBrowser();">
                 <i class="fa fa-arrow-alt-circle-up"></i>&nbsp;上传文件
             </button>
             <form id="uploadFileForm" method="post" class="d-none" enctype="multipart/form-data">
@@ -24,7 +22,7 @@
             </form>
         </div>
     </div>
-    <table class="table table-hover mt-2">
+    <table class="table table-hover mt-3">
         <thead class="bg-light">
         <tr>
             <td class="text-left">名称</td>

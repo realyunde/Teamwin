@@ -19,73 +19,68 @@
         </div>
     {% endif %}
 
-    <div class="row mb-2">
-        <div class="col text-left">
-            <h5>我的项目</h5>
-        </div>
-        <div class="col text-right">
-            <button type="button" class="btn" data-toggle="modal"
+    <div class="row">
+        <div class="col my-auto text-left">我的项目</div>
+        <div class="col my-auto text-right">
+            <button type="button" class="btn p-0" data-toggle="modal"
                     data-target="#newProjectModal">
                 <i class="fa fa-plus-circle"></i>&nbsp;新建项目
             </button>
         </div>
     </div>
 
-    {% for item in project_list %}
-        <div class="card border-dark mb-3 mx-auto">
+    {% for item in projects %}
+        <div class="card border-dark mt-3 mx-auto">
             <div class="card-header">
                 <div class="row">
                     <div class="col text-left">
                         <h5 class="card-title my-auto">
-                            <a class="card-link" href="{% url 'project_index' item.id %}">{{ item.name }}</a>
+                            <a class="card-link" href="{% url 'project_backlog' item.id %}">{{ item.name }}</a>
                         </h5>
                     </div>
-                    <div class="col text-right">
-                        创建时间：{{ item.created | date:"Y-m-d H:i:s" }}
-                    </div>
+                    <div class="col text-right">{{ item.created | date:"Y-m-d H:i:s" }}</div>
                 </div>
             </div>
             <div class="card-body">
-                <pre class="card-text" style="white-space: pre-wrap;">{{ item.description }}</pre>
+                <pre style="white-space: pre-wrap;">{{ item.description }}</pre>
             </div>
         </div>
     {% endfor %}
-</div>
 
-<!-- new project modal -->
-<div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newProjectModalLabel">新建项目</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="post" id="newProjectForm">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="new">
-                    <div class="form-group">
-                        <label for="newProjectName" class="col-form-label">项目名称</label>
-                        <input type="text" name="name" class="form-control" id="newProjectName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="newProjectDescription" class="col-form-label">项目描述</label>
-                        <textarea class="form-control" name="description" id="newProjectDescription"
-                                  rows="6" required></textarea>
-                    </div>
-                    <div class="form-group text-right">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                        <button type="submit" class="btn btn-primary">创建</button>
-                    </div>
-                </form>
+    <!-- new project modal -->
+    <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newProjectModalLabel">新建项目</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="newProjectForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="new">
+                        <div class="form-group">
+                            <label for="newProjectName" class="col-form-label">项目名称</label>
+                            <input type="text" name="name" class="form-control" id="newProjectName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newProjectDescription" class="col-form-label">项目描述</label>
+                            <textarea class="form-control" name="description" id="newProjectDescription"
+                                      rows="6" required></textarea>
+                        </div>
+                        <div class="form-group text-right">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary">创建</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 {% include 'include/js.html' %}
 </body>
 </html>

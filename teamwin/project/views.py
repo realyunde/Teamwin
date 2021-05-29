@@ -1,4 +1,3 @@
-import os
 import hashlib
 from django.utils.http import urlquote
 from django.conf import settings
@@ -8,34 +7,35 @@ from .models import Project, Developer, SharedFile, Task, Sprint
 from .. import auth
 
 
-def user_required(handler):
-    def wrapper(request, project_id):
+def member_required(handler):
+    def wrapper(request, *args, **kwargs):
         if not auth.is_authenticated(request):
             return redirect('index')
-        return handler(request, project_id)
+        else:
+            ok = False
+            user = auth.get_current_user(request)
+            project = Project.objects.get(id=kwargs['project_id'])
+            developers = Developer.objects.filter(project_id=kwargs['project_id'])
+            if user.id not in (project.owner_id, project.master_id):
+                for item in developers:
+                    if item.user_id == user.id:
+                        ok = True
+                        break
+            else:
+                ok = True
+            if not ok:
+                return redirect('user')
+        return handler(request, *args, **kwargs)
 
     return wrapper
 
 
-@user_required
-def index(request, project_id):
-    context = {
-        'project_id': project_id,
-    }
-    user = auth.get_current_user(request)
-    context['user'] = user
-    project = Project.objects.get(id=project_id)
-    developer_list = Developer.objects.filter(project_id=project_id)
-    context['project'] = project
-    context['developer_list'] = developer_list
-    return render(request, 'project/index.html', context)
-
-
-@user_required
+@member_required
 def project_backlog(request, project_id):
     context = {
         'project_id': project_id,
     }
+    user = auth.get_current_user(request)
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'newTask':
@@ -52,15 +52,46 @@ def project_backlog(request, project_id):
             task = Task.objects.get(id=task_id)
             task.delete()
     tasks = Task.objects.filter(project_id=project_id)
+    context['user'] = user
     context['tasks'] = tasks
     return render(request, 'project/backlog.html', context)
 
 
-@user_required
-def project_sprint(request, project_id):
+@member_required
+def project_task(request, project_id, task_id):
+    context = {
+        'project_id': project_id,
+        'task_id': task_id,
+    }
+    user = auth.get_current_user(request)
+    task = Task.objects.get(id=task_id)
+    context['task'] = task
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'deleteTask':
+            task = Task.objects.get(id=task_id)
+            task.delete()
+            return redirect('project_backlog', project_id)
+    context['user'] = user
+    return render(request, 'project/task.html', context)
+
+
+@member_required
+def project_sprint(request, project_id, sprint_id):
     context = {
         'project_id': project_id,
     }
+    user = auth.get_current_user(request)
+    context['user'] = user
+    return render(request, 'project/sprint.html', context)
+
+
+@member_required
+def project_sprints(request, project_id):
+    context = {
+        'project_id': project_id,
+    }
+    user = auth.get_current_user(request)
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'newSprint':
@@ -73,11 +104,12 @@ def project_sprint(request, project_id):
             )
             sprint.save()
     sprints = Sprint.objects.filter(project_id=project_id).order_by('-created')
+    context['user'] = user
     context['sprints'] = sprints
-    return render(request, 'project/sprint.html', context)
+    return render(request, 'project/sprints.html', context)
 
 
-@user_required
+@member_required
 def project_share(request, project_id):
     context = {
         'project_id': project_id,
@@ -117,7 +149,7 @@ def project_share(request, project_id):
     return render(request, 'project/share.html', context)
 
 
-@user_required
+@member_required
 def project_settings(request, project_id):
     context = {
         'project_id': project_id,
