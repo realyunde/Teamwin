@@ -145,3 +145,4 @@ migrations/
 
 # ignore upload files
 /storage
+/static_files
