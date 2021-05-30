@@ -8,25 +8,17 @@ class Project(models.Model):
         blank=False,
         max_length=200,
     )
+    description = models.TextField()
     created = models.DateTimeField(
         auto_now_add=True,
     )
-    description = models.TextField()
-    owner = models.ForeignKey(
-        'user.User',
-        on_delete=models.PROTECT,
-        related_name='product_owner',
-    )
-    master = models.ForeignKey(
-        'user.User',
-        null=True,
-        default=None,
-        on_delete=models.PROTECT,
-        related_name='scrum_master',
-    )
 
 
-class Developer(models.Model):
+class Member(models.Model):
+    OWNER = 0
+    MASTER = 1
+    DEVELOPER = 2
+
     user = models.ForeignKey(
         'user.User',
         on_delete=models.PROTECT,
@@ -34,6 +26,9 @@ class Developer(models.Model):
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
+    )
+    role = models.IntegerField(
+        choices=((OWNER, 'Production Owner'), (MASTER, 'Scrum Master'), (DEVELOPER, 'Developer')),
     )
 
     class Meta:

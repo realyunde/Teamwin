@@ -3,7 +3,7 @@ from django.utils.http import urlquote
 from django.conf import settings
 from django.http import FileResponse
 from django.shortcuts import render, redirect
-from .models import Project, Developer, SharedFile, Task, Sprint, Invitation
+from .models import Project, Member, SharedFile, Task, Sprint, Invitation
 from ..user.models import User
 from .. import auth
 
@@ -15,15 +15,11 @@ def member_required(handler):
         else:
             ok = False
             user = auth.get_current_user(request)
-            project = Project.objects.get(id=project_id)
-            developers = Developer.objects.filter(project_id=project_id)
-            if user.id not in (project.owner_id, project.master_id):
-                for item in developers:
-                    if item.user_id == user.id:
-                        ok = True
-                        break
-            else:
-                ok = True
+            members = Member.objects.filter(project_id=project_id)
+            for item in members:
+                if item.user == user:
+                    ok = True
+                    break
             if not ok:
                 return redirect('user')
         return handler(request, project_id, *args, **kwargs)

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import User
-from ..project.models import Project, Invitation
+from ..project.models import Project, Member, Invitation
 from .. import auth
 
 
@@ -86,17 +86,23 @@ def index(request):
             name = request.POST.get('name')
             description = request.POST.get('description')
             try:
-                Project.objects.create(
+                project = Project(
                     name=name,
-                    owner=user,
                     description=description,
                 )
+                project.save()
+                member = Member(
+                    user=user,
+                    project=project,
+                    role=Member.OWNER,
+                )
+                member.save()
             except Exception as e:
                 context['message'] = '新建项目失败！' + e.__str__()
             else:
                 context['message'] = '新建项目成功！'
     projects = Project.objects.filter(
-        owner=user,
+        member__user=user,
     )
     invitations = Invitation.objects.filter(invitee_id=user.id)
     context['user'] = user
