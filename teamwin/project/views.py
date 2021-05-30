@@ -8,19 +8,21 @@ from ..user.models import User
 from .. import auth
 
 
+def is_member(user, project_id):
+    members = Member.objects.filter(project_id=project_id)
+    for item in members:
+        if item.user == user:
+            return True
+    return False
+
+
 def member_required(handler):
     def wrapper(request, project_id, *args, **kwargs):
         if not auth.is_authenticated(request):
             return redirect('index')
         else:
-            ok = False
             user = auth.get_current_user(request)
-            members = Member.objects.filter(project_id=project_id)
-            for item in members:
-                if item.user == user:
-                    ok = True
-                    break
-            if not ok:
+            if not is_member(user, project_id):
                 return redirect('user')
         return handler(request, project_id, *args, **kwargs)
 
@@ -185,14 +187,23 @@ def project_settings_team(request, project_id):
             user_name = request.POST.get('userName')
             invitee = User.get_by_name(user_name)
             if invitee is None:
-                pass
+                context['message'] = '该用户不存在！'
             else:
-                invitation = Invitation(
-                    inviter_id=user.id,
-                    invitee_id=invitee.id,
-                    project_id=project_id,
-                )
-                invitation.save()
+                if is_member(invitee, project_id):
+                    context['message'] = '该用户已加入本项目！'
+                else:
+                    try:
+                        invitation = Invitation(
+                            inviter_id=user.id,
+                            invitee_id=invitee.id,
+                            project_id=project_id,
+                        )
+                        invitation.save()
+                        context['message'] = '已邀请该用户！'
+                    except Exception as e:
+                        context['message'] = '已邀请该用户！' + e.__str__()
+    members = User.objects.filter(member__project=project)
     context['user'] = user
     context['project'] = project
+    context['members'] = members
     return render(request, 'project/settings/team.html', context)

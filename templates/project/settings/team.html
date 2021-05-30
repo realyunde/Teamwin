@@ -9,6 +9,15 @@
 {% include 'project/include/navbar.html' %}
 
 <div class="container">
+    {% if message %}
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            <i class="fa fa-exclamation-triangle"></i>&nbsp;{{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link" href="{% url 'project_settings' project.id %}">项目</a>
@@ -25,12 +34,17 @@
             <label for="projectOwner" class="col-form-label">项目负责人</label>
             <select type="text" name="projectOwner" class="custom-select"
                     id="projectOwner">
-                <option value="{{ project.owner.id }}" selected>{{ project.owner.name }}</option>
+                {% for item in members %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
             </select>
         </div>
         <div class="form-group">
             <label for="projectMaster" class="col-form-label">敏捷教练</label>
             <select class="custom-select" name="projectMaster" id="projectMaster">
+                {% for item in members %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
             </select>
         </div>
         <div class="form-group">

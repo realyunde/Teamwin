@@ -134,3 +134,6 @@ class Invitation(models.Model):
     created = models.DateTimeField(
         auto_now_add=True,
     )
+
+    class Meta:
+        unique_together = ('inviter', 'invitee', 'project')
