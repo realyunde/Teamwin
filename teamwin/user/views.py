@@ -101,6 +101,27 @@ def index(request):
                 context['message'] = '新建项目失败！' + e.__str__()
             else:
                 context['message'] = '新建项目成功！'
+        elif action == 'accept':
+            invitation_id = request.POST.get('invitationId')
+            invitation = Invitation.objects.get(id=invitation_id)
+            member = Member(
+                user_id=user.id,
+                project_id=invitation.project_id,
+                role=Member.DEVELOPER,
+            )
+            member.save()
+            invitations = Invitation.objects.filter(
+                invitee_id=user.id,
+                project_id=invitation.project_id,
+            )
+            for item in invitations:
+                item.delete()
+            context['message'] = '已加入！'
+        elif action == 'refuse':
+            invitation_id = request.POST.get('invitationId')
+            invitation = Invitation.objects.get(id=invitation_id)
+            invitation.delete()
+            context['message'] = '已拒绝！'
     projects = Project.objects.filter(
         member__user=user,
     )
