@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import User
-from ..project.models import Project
+from ..project.models import Project, Invitation
 from .. import auth
 
 
@@ -98,6 +98,8 @@ def index(request):
     projects = Project.objects.filter(
         owner=user,
     )
+    invitations = Invitation.objects.filter(invitee_id=user.id)
     context['user'] = user
     context['projects'] = projects
+    context['invitations'] = invitations
     return render(request, 'user/index.html', context)

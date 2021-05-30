@@ -19,21 +19,27 @@
         </div>
     </div>
 
-    {% for item in sprints %}
-        <div class="card border-dark mt-3 mx-auto">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col text-left">
-                        <a href="{% url 'project_sprint' project_id item.id %}">{{ item.name }}</a>
+    {% if sprints %}
+        {% for item in sprints %}
+            <div class="card border-dark mt-3 mx-auto">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col text-left">
+                            <a href="{% url 'project_sprint' project_id item.id %}">{{ item.name }}</a>
+                        </div>
+                        <div class="col text-right">{{ item.created | date:"Y-m-d H:i:s" }}</div>
                     </div>
-                    <div class="col text-right">{{ item.created | date:"Y-m-d H:i:s" }}</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ item.goal }}</p>
                 </div>
             </div>
-            <div class="card-body">
-                <p class="card-text">{{ item.goal }}</p>
-            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning mt-3 text-center" role="alert">
+            未创建迭代！
         </div>
-    {% endfor %}
+    {% endif %}
 
     <div class="modal fade" id="newSprintModal" tabindex="-1" aria-labelledby="newSprintModalLabel"
          aria-hidden="true">

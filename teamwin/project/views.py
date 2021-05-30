@@ -8,14 +8,14 @@ from .. import auth
 
 
 def member_required(handler):
-    def wrapper(request, *args, **kwargs):
+    def wrapper(request, project_id, *args, **kwargs):
         if not auth.is_authenticated(request):
             return redirect('index')
         else:
             ok = False
             user = auth.get_current_user(request)
-            project = Project.objects.get(id=kwargs['project_id'])
-            developers = Developer.objects.filter(project_id=kwargs['project_id'])
+            project = Project.objects.get(id=project_id)
+            developers = Developer.objects.filter(project_id=project_id)
             if user.id not in (project.owner_id, project.master_id):
                 for item in developers:
                     if item.user_id == user.id:
@@ -25,7 +25,7 @@ def member_required(handler):
                 ok = True
             if not ok:
                 return redirect('user')
-        return handler(request, *args, **kwargs)
+        return handler(request, project_id, *args, **kwargs)
 
     return wrapper
 

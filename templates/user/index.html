@@ -20,32 +20,77 @@
     {% endif %}
 
     <div class="row">
-        <div class="col my-auto text-left">我的项目</div>
-        <div class="col my-auto text-right">
-            <button type="button" class="btn p-0" data-toggle="modal"
-                    data-target="#newProjectModal">
-                <i class="fa fa-plus-circle"></i>&nbsp;新建项目
-            </button>
-        </div>
-    </div>
-
-    {% for item in projects %}
-        <div class="card border-dark mt-3 mx-auto">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col text-left">
-                        <h5 class="card-title my-auto">
-                            <a class="card-link" href="{% url 'project_backlog' item.id %}">{{ item.name }}</a>
-                        </h5>
-                    </div>
-                    <div class="col text-right">{{ item.created | date:"Y-m-d H:i:s" }}</div>
+        <div class="col-8 border-right">
+            <div class="row">
+                <div class="col my-auto text-left">我的项目</div>
+                <div class="col my-auto text-right">
+                    <button type="button" class="btn p-0" data-toggle="modal"
+                            data-target="#newProjectModal">
+                        <i class="fa fa-plus-circle"></i>&nbsp;新建项目
+                    </button>
                 </div>
             </div>
-            <div class="card-body">
-                <pre style="white-space: pre-wrap;">{{ item.description }}</pre>
-            </div>
+
+            {% if projects %}
+                {% for item in projects %}
+                    <div class="card border-dark mt-3 mx-auto">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col text-left">
+                                    <h5 class="card-title my-auto">
+                                        <a class="card-link"
+                                           href="{% url 'project_backlog' item.id %}">{{ item.name }}</a>
+                                    </h5>
+                                </div>
+                                <div class="col text-right">{{ item.created | date:"Y-m-d H:i:s" }}</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <pre style="white-space: pre-wrap;">{{ item.description }}</pre>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning mt-3 text-center" role="alert">
+                    您还未创建或加入任何项目！
+                </div>
+            {% endif %}
         </div>
-    {% endfor %}
+        <div class="col-4 border-left">
+            <div class="row">
+                <div class="col my-auto text-left">我的消息</div>
+            </div>
+            {% if invitations %}
+                {% for item in invitations %}
+                    <div class="card border-dark mt-3 mx-auto">
+                        <div class="card-body">
+                            <p class="card-title text-muted">
+                                {{ item.created | date:"Y-m-d H:i:s" }}
+                            </p>
+                            <p class="card-text">
+                                {{ item.inviter.name }}邀请您加入{{ item.project.name }}
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <button class="btn btn-sm btn-primary">加入</button>
+                                        <button class="btn btn-sm btn-danger">拒绝</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning mt-3 text-center" role="alert">
+                    没有关于您的消息！
+                </div>
+            {% endif %}
+        </div>
+    </div>
 
     <!-- new project modal -->
     <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel"

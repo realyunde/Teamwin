@@ -90,6 +90,22 @@ class Task(models.Model):
     )
 
 
+class TaskComment(models.Model):
+    comment = models.TextField()
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    author = models.ForeignKey(
+        'user.User',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+    )
+
+
 # Share
 class SharedFile(models.Model):
     name = models.CharField(max_length=254)
@@ -101,4 +117,25 @@ class SharedFile(models.Model):
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
+    )
+
+
+# Invitation
+class Invitation(models.Model):
+    inviter = models.ForeignKey(
+        'user.User',
+        related_name='inviter',
+        on_delete=models.CASCADE,
+    )
+    invitee = models.ForeignKey(
+        'user.User',
+        related_name='invitee',
+        on_delete=models.CASCADE,
+    )
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
     )
