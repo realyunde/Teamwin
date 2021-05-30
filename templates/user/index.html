@@ -68,10 +68,12 @@
                                 {{ item.created | date:"Y-m-d H:i:s" }}
                             </p>
                             <p class="card-text">
-                                {{ item.inviter.name }}邀请您加入{{ item.project.name }}
+                                <strong>{{ item.inviter.name }}</strong>
+                                邀请您加入项目
+                                <strong>{{ item.project.name }}</strong>
                             </p>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer p-1">
                             <div class="row">
                                 <div class="col text-right">
                                     <form method="post">

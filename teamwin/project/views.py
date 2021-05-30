@@ -3,7 +3,8 @@ from django.utils.http import urlquote
 from django.conf import settings
 from django.http import FileResponse
 from django.shortcuts import render, redirect
-from .models import Project, Developer, SharedFile, Task, Sprint
+from .models import Project, Developer, SharedFile, Task, Sprint, Invitation
+from ..user.models import User
 from .. import auth
 
 
@@ -170,4 +171,32 @@ def project_settings(request, project_id):
             project.delete()
             return redirect('user')
     context['project'] = project
-    return render(request, 'project/settings.html', context)
+    return render(request, 'project/settings/index.html', context)
+
+
+@member_required
+def project_settings_team(request, project_id):
+    context = {
+        'project_id': project_id,
+    }
+    user = auth.get_current_user(request)
+    project = Project.objects.get(id=project_id)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'updateRole':
+            pass
+        elif action == 'inviteUser':
+            user_name = request.POST.get('userName')
+            invitee = User.get_by_name(user_name)
+            if invitee is None:
+                pass
+            else:
+                invitation = Invitation(
+                    inviter_id=user.id,
+                    invitee_id=invitee.id,
+                    project_id=project_id,
+                )
+                invitation.save()
+    context['user'] = user
+    context['project'] = project
+    return render(request, 'project/settings/team.html', context)
