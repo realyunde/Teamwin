@@ -5,7 +5,8 @@ urlpatterns = [
     # settings
     path('<int:project_id>/settings', views.project_settings, name='project_settings'),
     path('<int:project_id>/settings/team', views.project_settings_team, name='project_settings_team'),
-
+    path('<int:project_id>/settings/role', views.project_settings_role, name='project_settings_role'),
+    # share
     path('<int:project_id>/share', views.project_share, name='project_share'),
     # backlog
     path('<int:project_id>/backlog', views.project_backlog, name='project_backlog'),

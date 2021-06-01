@@ -217,3 +217,40 @@ def project_settings_team(request, project_id):
     context['project'] = project
     context['members'] = members
     return render(request, 'project/settings/team.html', context)
+
+
+@member_required
+def project_settings_role(request, project_id):
+    context = {
+        'project_id': project_id,
+    }
+    user = auth.get_current_user(request)
+    project = Project.objects.get(id=project_id)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'updateRole':
+            pass
+        elif action == 'inviteUser':
+            user_name = request.POST.get('userName')
+            invitee = User.get_by_name(user_name)
+            if invitee is None:
+                context['message'] = '该用户不存在！'
+            else:
+                if is_member(invitee, project_id):
+                    context['message'] = '该用户已加入本项目！'
+                else:
+                    try:
+                        invitation = Invitation(
+                            inviter_id=user.id,
+                            invitee_id=invitee.id,
+                            project_id=project_id,
+                        )
+                        invitation.save()
+                        context['message'] = '已邀请该用户！'
+                    except Exception as e:
+                        context['message'] = '已邀请该用户！' + e.__str__()
+    members = User.objects.filter(member__project=project)
+    context['user'] = user
+    context['project'] = project
+    context['members'] = members
+    return render(request, 'project/settings/role.html', context)
