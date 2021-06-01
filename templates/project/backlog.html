@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="col text-left">
                             <a class="card-link"
-                               href="{% url 'project_task' project_id item.id %}">{{ item.subject }}</a>
+                               href="{% url 'project_task' project.id item.id %}">{{ item.subject }}</a>
                         </div>
                         <div class="col text-right">{{ item.created | date:"Y-m-d H:i:s" }}</div>
                     </div>

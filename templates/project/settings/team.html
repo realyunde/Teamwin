@@ -30,39 +30,27 @@
         </li>
     </ul>
 
-    <form method="post" id="updateRoleForm" class="mt-3">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="updateRole">
-        <div class="form-group">
-            <label for="projectOwner" class="col-form-label">项目负责人</label>
-            <select type="text" name="projectOwner" class="custom-select"
-                    id="projectOwner">
-                {% for item in members %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
-                {% endfor %}
-            </select>
+    <div>
+        <div>
+            <p>项目负责人</p>
+            {% for item in members %}
+                {% if item.role == 0 %}
+                    <p>{{ item.name }}</p>
+                {% endif %}
+            {% endfor %}
         </div>
-        <div class="form-group">
-            <label for="projectMaster" class="col-form-label">敏捷教练</label>
-            <select class="custom-select" name="projectMaster" id="projectMaster">
-                {% for item in members %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
-                {% endfor %}
-            </select>
+        <div>
+            <p>敏捷教练</p>
+            {% if item.role == 0 %}
+                <p>{{ item.name }}</p>
+            {% endif %}
         </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col text-left">
-                    <button type="submit" class="btn btn-primary">保存</button>
-                </div>
-                <div class="col text-right">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#inviteModal">
-                        邀请加入
-                    </button>
-                </div>
-            </div>
+        <div>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#inviteModal">
+                邀请加入
+            </button>
         </div>
-    </form>
+    </div>
 
     <!-- modal -->
     <div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="inviteModalLabel" aria-hidden="true">

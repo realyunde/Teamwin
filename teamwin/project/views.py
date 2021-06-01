@@ -31,10 +31,9 @@ def member_required(handler):
 
 @member_required
 def project_backlog(request, project_id):
-    context = {
-        'project_id': project_id,
-    }
+    context = {}
     user = auth.get_current_user(request)
+    project = Project.objects.get(id=project_id)
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'newTask':
@@ -53,18 +52,16 @@ def project_backlog(request, project_id):
     tasks = Task.objects.filter(project_id=project_id)
     context['user'] = user
     context['tasks'] = tasks
+    context['project'] = project
     return render(request, 'project/backlog.html', context)
 
 
 @member_required
 def project_task(request, project_id, task_id):
-    context = {
-        'project_id': project_id,
-        'task_id': task_id,
-    }
+    context = {}
     user = auth.get_current_user(request)
     task = Task.objects.get(id=task_id)
-    context['task'] = task
+    project = Project.objects.get(id=project_id)
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'deleteTask':
@@ -81,26 +78,27 @@ def project_task(request, project_id, task_id):
             task_comment.save()
     comments = TaskComment.objects.filter(task_id=task_id)
     context['user'] = user
+    context['task'] = task
+    context['project'] = project
     context['comments'] = comments
     return render(request, 'project/task.html', context)
 
 
 @member_required
 def project_sprint(request, project_id, sprint_id):
-    context = {
-        'project_id': project_id,
-    }
+    context = {}
     user = auth.get_current_user(request)
+    project = Project.objects.get(id=project_id)
     context['user'] = user
+    context['project'] = project
     return render(request, 'project/sprint.html', context)
 
 
 @member_required
 def project_sprints(request, project_id):
-    context = {
-        'project_id': project_id,
-    }
+    context = {}
     user = auth.get_current_user(request)
+    project = Project.objects.get(id=project_id)
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'newSprint':
@@ -114,17 +112,16 @@ def project_sprints(request, project_id):
             sprint.save()
     sprints = Sprint.objects.filter(project_id=project_id).order_by('-created')
     context['user'] = user
+    context['project'] = project
     context['sprints'] = sprints
     return render(request, 'project/sprints.html', context)
 
 
 @member_required
 def project_share(request, project_id):
-    context = {
-        'project_id': project_id,
-    }
+    context = {}
     user = auth.get_current_user(request)
-    context['user'] = user
+    project = Project.objects.get(id=project_id)
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'uploadFile':
@@ -154,17 +151,16 @@ def project_share(request, project_id):
             response['Content-Disposition'] = 'attachment; filename="{}"'.format(urlquote(file.name))
             return response
     files = SharedFile.objects.filter(project_id=project_id)
+    context['user'] = user
+    context['project'] = project
     context['files'] = files
     return render(request, 'project/share.html', context)
 
 
 @member_required
 def project_settings(request, project_id):
-    context = {
-        'project_id': project_id,
-    }
+    context = {}
     user = auth.get_current_user(request)
-    context['user'] = user
     project = Project.objects.get(id=project_id)
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -178,22 +174,19 @@ def project_settings(request, project_id):
         elif action == 'deleteProject':
             project.delete()
             return redirect('user')
+    context['user'] = user
     context['project'] = project
     return render(request, 'project/settings/index.html', context)
 
 
 @member_required
 def project_settings_team(request, project_id):
-    context = {
-        'project_id': project_id,
-    }
+    context = {}
     user = auth.get_current_user(request)
     project = Project.objects.get(id=project_id)
     if request.method == 'POST':
         action = request.POST.get('action')
-        if action == 'updateRole':
-            pass
-        elif action == 'inviteUser':
+        if action == 'inviteUser':
             user_name = request.POST.get('userName')
             invitee = User.get_by_name(user_name)
             if invitee is None:
@@ -221,34 +214,13 @@ def project_settings_team(request, project_id):
 
 @member_required
 def project_settings_role(request, project_id):
-    context = {
-        'project_id': project_id,
-    }
+    context = {}
     user = auth.get_current_user(request)
     project = Project.objects.get(id=project_id)
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'updateRole':
             pass
-        elif action == 'inviteUser':
-            user_name = request.POST.get('userName')
-            invitee = User.get_by_name(user_name)
-            if invitee is None:
-                context['message'] = '该用户不存在！'
-            else:
-                if is_member(invitee, project_id):
-                    context['message'] = '该用户已加入本项目！'
-                else:
-                    try:
-                        invitation = Invitation(
-                            inviter_id=user.id,
-                            invitee_id=invitee.id,
-                            project_id=project_id,
-                        )
-                        invitation.save()
-                        context['message'] = '已邀请该用户！'
-                    except Exception as e:
-                        context['message'] = '已邀请该用户！' + e.__str__()
     members = User.objects.filter(member__project=project)
     context['user'] = user
     context['project'] = project
