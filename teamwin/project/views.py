@@ -205,7 +205,7 @@ def project_settings_team(request, project_id):
                         context['message'] = '已邀请该用户！'
                     except Exception as e:
                         context['message'] = '已邀请该用户！' + e.__str__()
-    members = User.objects.filter(member__project=project)
+    members = Member.objects.filter(project_id=project_id).order_by('role')
     context['user'] = user
     context['project'] = project
     context['members'] = members
