@@ -221,7 +221,7 @@ def project_settings_role(request, project_id):
         action = request.POST.get('action')
         if action == 'updateRole':
             pass
-    members = User.objects.filter(member__project=project)
+    members = Member.objects.filter(project_id=project_id).order_by('role')
     context['user'] = user
     context['project'] = project
     context['members'] = members

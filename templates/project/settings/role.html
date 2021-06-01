@@ -38,7 +38,11 @@
             <select type="text" name="projectOwner" class="custom-select"
                     id="projectOwner">
                 {% for item in members %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    <option value="{{ item.user.id }}"
+                            {% if item.role == 0 %}
+                            selected
+                            {% endif %}
+                    >{{ item.user.name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -46,7 +50,11 @@
             <label for="projectMaster" class="col-form-label">敏捷教练</label>
             <select class="custom-select" name="projectMaster" id="projectMaster">
                 {% for item in members %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    <option value="{{ item.user.id }}"
+                            {% if item.role == 1 %}
+                            selected
+                            {% endif %}
+                    >{{ item.user.name }}</option>
                 {% endfor %}
             </select>
         </div>

@@ -31,9 +31,7 @@
     </ul>
 
     <div class="row mt-3 mb-1">
-        <div class="col my-auto text-left">
-            <span><strong>所有成员</strong></span>
-        </div>
+        <div class="col my-auto text-left">所有成员</div>
         <div class="col my-auto text-right">
             <button type="button" class="btn p-0" data-toggle="modal" data-target="#inviteModal">
                 <i class="fa fa-plus-circle"></i>&nbsp;邀请加入
@@ -46,6 +44,7 @@
         {% for item in members %}
             <tr>
                 <td>{{ item.user.name }}</td>
+                <td>{{ item.user.email }}</td>
                 {% if item.role == 0 %}
                     <td>项目负责人</td>
                 {% endif %}
