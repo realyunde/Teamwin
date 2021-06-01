@@ -76,7 +76,7 @@ def project_task(request, project_id, task_id):
                 task_id=task_id,
             )
             task_comment.save()
-    comments = TaskComment.objects.filter(task_id=task_id)
+    comments = TaskComment.objects.filter(task_id=task_id).order_by('created')
     context['user'] = user
     context['task'] = task
     context['project'] = project
