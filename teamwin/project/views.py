@@ -3,7 +3,7 @@ from django.utils.http import urlquote
 from django.conf import settings
 from django.http import FileResponse
 from django.shortcuts import render, redirect
-from .models import Project, Member, SharedFile, Task, Sprint, Invitation
+from .models import Project, Member, SharedFile, Task, Sprint, Invitation, TaskComment
 from ..user.models import User
 from .. import auth
 
@@ -71,7 +71,17 @@ def project_task(request, project_id, task_id):
             task = Task.objects.get(id=task_id)
             task.delete()
             return redirect('project_backlog', project_id)
+        elif action == 'commentTask':
+            comment = request.POST.get('comment')
+            task_comment = TaskComment(
+                comment=comment,
+                author_id=user.id,
+                task_id=task_id,
+            )
+            task_comment.save()
+    comments = TaskComment.objects.filter(task_id=task_id)
     context['user'] = user
+    context['comments'] = comments
     return render(request, 'project/task.html', context)
 
 
