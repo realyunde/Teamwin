@@ -9,76 +9,91 @@
 {% include 'project/include/navbar.html' %}
 
 <div class="container">
-    <div class="row">
-        <div class="col-9">
-            <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col my-auto text-left">{{ task.subject }}</div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <pre style="white-space: pre-wrap;">{{ task.description }}</pre>
-                </div>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div id="taskSubject" class="col my-auto text-left">{{ task.subject }}</div>
+                <div class="col my-auto text-right">{{ task.created | date:"Y-m-d H:i:s" }}</div>
             </div>
-            <div class="card mt-3">
-                <div class="card-body">
-                    {% if comments %}
-                        <div class="pre-scrollable">
-                            {% for item in comments %}
-                                <div class="card-text text-muted mt-1">
+        </div>
+        <div class="card-body">
+            <pre id="taskDescription" style="white-space: pre-wrap;">{{ task.description }}</pre>
+        </div>
+        <div class="card-footer text-right p-1">
+            <button type="button" class="btn btn-sm btn-warning"
+                    data-toggle="modal" data-target="#exampleModal" onclick="editTask();">
+                修改
+            </button>
+            <button type="button" class="btn btn-sm btn-danger"
+                    onclick="deleteTask();">删除
+            </button>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">评论</div>
+        <div class="card-body">
+            {% if comments %}
+                <div class="pre-scrollable">
+                    {% for item in comments %}
+                        <div class="card-text text-muted mt-2 ml-1">
                                     <span>
                                         <strong>{{ item.author.name }}</strong>
                                         {{ item.created | date:"Y-m-d H:i:s" }}
                                     </span>
-                                </div>
-                                <pre class="border border-info rounded text-wrap p-2">{{ item.comment }}</pre>
-                            {% endfor %}
                         </div>
-                    {% endif %}
-                    <form class="mt-3" method="post">
+                        <pre class="border border-info rounded text-wrap p-2">{{ item.comment }}</pre>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <form class="mt-3" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="commentTask">
+                <div class="input-group">
+                    <input type="text" name="comment" class="form-control" required>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn border btn-success">评论</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">修改代办</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="action" value="commentTask">
-                        <div class="input-group">
-                            <input type="text" name="comment" class="form-control">
-                            <div class="input-group-append">
-                                <button type="submit" class="btn border btn-success">评论</button>
-                            </div>
+                        <input type="hidden" name="action" value="updateTask">
+                        <div class="form-group">
+                            <label for="editTaskSubject">主题</label>
+                            <input type="text" name="taskSubject" class="form-control" id="editTaskSubject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTaskDescription">描述</label>
+                            <textarea class="form-control" name="taskDescription" id="editTaskDescription"
+                                      rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTaskAssigned">负责人</label>
+                            <select class="custom-select" id="editTaskAssigned">
+                            </select>
+                        </div>
+                        <div class="form-group text-right">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary">保存</button>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
-        <div class="col-3">
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="updateTask">
-                <div class="form-group">
-                    <label for="editTaskSubject" class="col-form-label">主题</label>
-                    <input type="text" name="taskSubject" class="form-control" id="editTaskSubject" required>
-                </div>
-                <div class="form-group">
-                    <label for="editTaskDescription" class="col-form-label">描述</label>
-                    <textarea class="form-control" name="taskDescription" id="editTaskDescription"
-                              rows="5" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="editTaskAssigned" class="col-form-label">负责人</label>
-                    <select class="custom-select" id="editTaskAssigned">
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="editTaskSprint" class="col-form-label">移动到迭代</label>
-                    <select class="custom-select" id="editTaskSprint">
-                    </select>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-danger"
-                            onclick="deleteTask();">删除
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 
@@ -96,6 +111,11 @@
         if (confirm("确定删除此事项吗？")) {
             $("#deleteTaskForm").submit();
         }
+    }
+
+    function editTask() {
+        $("#editTaskSubject").val($("#taskSubject")[0].outerText);
+        $("#editTaskDescription").val($("#taskDescription")[0].outerText);
     }
 </script>
 </body>
