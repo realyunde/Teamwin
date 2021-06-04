@@ -14,7 +14,7 @@
         <div class="col my-auto text-right">
             <button type="button" class="btn p-0" data-toggle="modal"
                     data-target="#newTaskModal">
-                <i class="fa fa-plus-circle"></i>&nbsp;新建事项
+                <i class="fa fa-plus-circle"></i>&nbsp;新建代办
             </button>
         </div>
     </div>
@@ -47,7 +47,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newTaskModalLabel">新建事项</h5>
+                    <h5 class="modal-title" id="newTaskModalLabel">新建代办</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -57,11 +57,11 @@
                         {% csrf_token %}
                         <input type="hidden" name="action" value="newTask">
                         <div class="form-group">
-                            <label for="newTaskSubject" class="col-form-label">事项主题</label>
+                            <label for="newTaskSubject" class="col-form-label">代办主题</label>
                             <input type="text" name="taskSubject" class="form-control" id="newTaskSubject" required>
                         </div>
                         <div class="form-group">
-                            <label for="newTaskDescription" class="col-form-label">事项描述</label>
+                            <label for="newTaskDescription" class="col-form-label">代办描述</label>
                             <textarea class="form-control" name="taskDescription" id="newTaskDescription"
                                       rows="6" required></textarea>
                         </div>

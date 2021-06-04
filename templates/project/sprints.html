@@ -25,7 +25,7 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col text-left">
-                            <a href="{% url 'project_sprint' project.id item.id %}">{{ item.name }}</a>
+                            <a class="card-link" href="{% url 'project_sprint' project.id item.id %}">{{ item.name }}</a>
                         </div>
                         <div class="col text-right">{{ item.created | date:"Y-m-d H:i:s" }}</div>
                     </div>
