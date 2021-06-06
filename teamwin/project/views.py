@@ -39,20 +39,27 @@ def project_backlog(request, project_id):
         if action == 'newTask':
             subject = request.POST.get('taskSubject')
             description = request.POST.get('taskDescription')
+            assigned = request.POST.get('taskAssigned')
             task = Task(
                 subject=subject,
                 description=description,
                 project_id=project_id,
             )
+            if assigned == '':
+                task.assigned = None
+            else:
+                task.assigned_id = assigned
             task.save()
         elif action == 'deleteTask':
             task_id = request.POST.get('taskId')
             task = Task.objects.get(id=task_id)
             task.delete()
     tasks = Task.objects.filter(project_id=project_id)
+    members = Member.objects.filter(project_id=project_id).order_by('role')
     context['user'] = user
     context['tasks'] = tasks
     context['project'] = project
+    context['members'] = members
     return render(request, 'project/backlog.html', context)
 
 
@@ -68,6 +75,22 @@ def project_task(request, project_id, task_id):
             task = Task.objects.get(id=task_id)
             task.delete()
             return redirect('project_backlog', project_id)
+        elif action == 'updateTask':
+            subject = request.POST.get('taskSubject')
+            description = request.POST.get('taskDescription')
+            assigned = request.POST.get('taskAssigned')
+            task.subject = subject
+            task.description = description
+            if assigned == '':
+                task.assigned_id = None
+            else:
+                try:
+                    assigned = int(assigned)
+                except Exception as e:
+                    pass
+                else:
+                    task.assigned_id = assigned
+            task.save()
         elif action == 'commentTask':
             comment = request.POST.get('comment')
             task_comment = TaskComment(
@@ -76,10 +99,12 @@ def project_task(request, project_id, task_id):
                 task_id=task_id,
             )
             task_comment.save()
+    members = Member.objects.filter(project_id=project_id).order_by('role')
     comments = TaskComment.objects.filter(task_id=task_id).order_by('created')
     context['user'] = user
     context['task'] = task
     context['project'] = project
+    context['members'] = members
     context['comments'] = comments
     return render(request, 'project/task.html', context)
 

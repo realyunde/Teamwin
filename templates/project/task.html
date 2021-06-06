@@ -19,14 +19,25 @@
         <div class="card-body">
             <pre id="taskDescription" style="white-space: pre-wrap;">{{ task.description }}</pre>
         </div>
-        <div class="card-footer text-right p-1">
-            <button type="button" class="btn btn-sm btn-warning"
-                    data-toggle="modal" data-target="#exampleModal" onclick="editTask();">
-                修改
-            </button>
-            <button type="button" class="btn btn-sm btn-danger"
-                    onclick="deleteTask();">删除
-            </button>
+        <div class="card-footer text-right py-1">
+            <div class="row">
+                <div class="col text-left my-auto">
+                    {% if task.assigned %}
+                        <span>负责人：{{ task.assigned.name }}</span>
+                    {% else %}
+                        <span class="text-danger">负责人：无</span>
+                    {% endif %}
+                </div>
+                <div class="col text-right my-auto">
+                    <button type="button" class="btn btn-sm btn-warning"
+                            data-toggle="modal" data-target="#exampleModal" onclick="editTask();">
+                        修改
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger"
+                            onclick="deleteTask();">删除
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -84,7 +95,23 @@
                         </div>
                         <div class="form-group">
                             <label for="editTaskAssigned">负责人</label>
-                            <select class="custom-select" id="editTaskAssigned">
+                            <select class="custom-select" name="taskAssigned" id="editTaskAssigned">
+                                {% if not task.assigned %}
+                                    <option value="" selected>无</option>
+                                    {% for item in members %}
+                                        <option value="{{ item.user.id }}">{{ item.user.name }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="">无</option>
+                                    {% for item in members %}
+                                        <option value="{{ item.user.id }}"
+                                                {% if task.assigned.id == item.user.id %}
+                                                selected
+                                                {% endif %}>
+                                            {{ item.user.name }}
+                                        </option>
+                                    {% endfor %}
+                                {% endif %}
                             </select>
                         </div>
                         <div class="form-group text-right">
